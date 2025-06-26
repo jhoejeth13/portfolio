@@ -11,6 +11,18 @@ const About = () => {
     {
       src: "/intern/2.jpg",
       alt: "Internship moment",
+       description: "SOS 10th Year Anniversary and 2024 Year-End Glitz & Glam Party "
+
+    },
+    {
+      src: "/intern/11.jpg",
+      alt: "Internship moment",
+      description: "SOS 10th Year Anniversary and 2024 Year-End Glitz & Glam Party "
+    },
+    {
+      src: "/intern/7.jpg",
+      alt: "Team presentation",
+      description: "Presenting our project to the CEO"
     },
     {
       src: "/intern/3.jpg",
@@ -23,7 +35,27 @@ const About = () => {
       description: "Presenting our project to the CEO"
     },
     {
+      src: "/intern/6.jpg",
+      alt: "Team photo",
+      description: "Project demo presentation with the team"    
+    },
+        {
+      src: "/intern/7.jpeg",
+      alt: "Team photo",
+      description: "Project demo presentation with the team"    
+    },
+    {
+      src: "/intern/12.jpg",
+      alt: "Certificate awarding",
+      description: "Receiving certificate of completion"
+    },
+    {
       src: "/intern/1.jpg",
+      alt: "Certificate awarding",
+      description: "Receiving certificate of completion"
+    },
+    {
+      src: "/intern/8.jpg",
       alt: "Certificate awarding",
       description: "Receiving certificate of completion"
     },
@@ -224,7 +256,10 @@ I’m a dedicated IT graduate with a passion for turning ideas into real-world s
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
-            <CarouselTitle>Internship Moments</CarouselTitle>
+<CarouselTitle>Internship Moments</CarouselTitle>
+<CarouselDescription>
+Snapshots from my internship journey with eComia — showcasing collaboration, presentations, and milestones.
+</CarouselDescription>
             <CarouselContainer>
               <CarouselButton $direction="left" onClick={prevImage}>
                 <FiChevronLeft />
@@ -652,9 +687,9 @@ const CarouselCaption = styled.div`
   right: 0;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
   color: white;
-  padding: 1.5rem;
+  padding: 0.1rem;
   text-align: center;
-  font-size: 1rem;
+  font-size: 0.8rem;
 `;
 
 const CarouselIndicators = styled.div`
@@ -681,5 +716,14 @@ const CarouselIndicator = styled.div<CarouselIndicatorProps>`
     transform: scale(1.2);
   }
 `;
+const CarouselDescription = styled.p`
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 4rem;
+  font-size: 1rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  line-height: 1;
+`;
+
 
 export default About;

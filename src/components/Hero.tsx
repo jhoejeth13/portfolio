@@ -30,8 +30,8 @@ const Hero = () => {
                 View My Work
               </CTAButton>
               { <DownloadButton 
-                href="/CV/Mondejar, Jhoejeth L. - CV (2).pdf"  
-                download="Jhoejeth_Mondejar_CV.pdf"
+                href="/CV/Mondejar, Jhoejeth L. - final.pdf"  
+                download="Jhoejeth Mondejar - CV.pdf"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
