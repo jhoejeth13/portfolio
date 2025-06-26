@@ -1,20 +1,107 @@
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 const About = () => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  const images = [
+    {
+      src: "/intern/2.jpg",
+      alt: "Internship moment",
+    },
+    {
+      src: "/intern/3.jpg",
+      alt: "Team presentation",
+      description: "Presenting our project to the CEO"
+    },
+    {
+      src: "/intern/4.jpg",
+      alt: "Project demo",
+      description: "Presenting our project to the CEO"
+    },
+    {
+      src: "/intern/1.jpg",
+      alt: "Certificate awarding",
+      description: "Receiving certificate of completion"
+    },
+    {
+      src: "/intern/5.jpg",
+      alt: "Team photo",
+      description:"Group photo with the internship team and Supervisor"
+    }
+  ];
+
+  // Autoplay effect
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+    
+    if (isAutoPlaying) {
+      intervalId = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => 
+          prevIndex === images.length - 1 ? 0 : prevIndex + 1
+        );
+      }, 3000); // Change image every 3 seconds
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [isAutoPlaying, images.length]);
+
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
+    setIsAutoPlaying(false);
+    setTimeout(() => setIsAutoPlaying(true), 5000);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+    );
+    setIsAutoPlaying(false);
+    setTimeout(() => setIsAutoPlaying(true), 5000);
+  };
+
+  const handleMouseEnter = () => setIsAutoPlaying(false);
+  const handleMouseLeave = () => setIsAutoPlaying(true);
+
   return (
     <AboutSection id="about">
       <SectionContainer>
-        <SectionTitle>About Me</SectionTitle>
+        <SectionTitle
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          About Me
+        </SectionTitle>
+
         <AboutContent>
-          <IntroText>
+          <IntroText
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
+          >
             <p>
-              A dedicated IT graduate from Caraga State University – Cabadbaran Campus (CSUCC), eager to apply and expand technical skills in real-world settings. A fresh graduate with a strong foundation in both web and mobile development, cloud technologies, and API integration. Brings excellent problem-solving abilities, adaptability, and teamwork, with a goal of becoming a well-rounded, career-driven professional in the tech industry.
-            </p>
+I’m a dedicated IT graduate with a passion for turning ideas into real-world solutions. Over the past few years, I’ve built a strong foundation in web and mobile development, explored cloud technologies, and worked with API integrations. Through these experiences, I’ve developed essential skills in problem-solving, adaptability, and collaboration. Now, I’m eager to take the next step in my journey—continuing to grow, learn, and contribute meaningfully in the tech industry.            </p>
           </IntroText>
 
           <InfoGrid>
             {/* Education Section */}
-            <InfoCard>
+            <InfoCard
+              whileHover={{ y: -5 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
               <InfoTitle>
                 <IconWrapper>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -36,7 +123,13 @@ const About = () => {
             </InfoCard>
 
             {/* Work Experience Section */}
-            <InfoCard>
+            <InfoCard
+              whileHover={{ y: -5 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+            >
               <InfoTitle>
                 <IconWrapper>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -48,7 +141,13 @@ const About = () => {
               <InfoItem>
                 <h3>Web Developer Intern</h3>
                 <Company>Staff Outsourcing Solutions</Company>
+                <Location>7F MDCT Building, Leyte Loop, Cebu Business Park, Cebu City, 6000 Philippines</Location>
                 <Duration>August 2024 - January 2025</Duration>
+                <AchievementsList>
+                  <li>Developed two complex responsive web and mobile applications</li>
+                  <li>Collaborated with cross-functional teams</li>
+                  <li>Implemented RESTful API integrations</li>
+                </AchievementsList>
               </InfoItem>
               <InfoItem>
                 <h3>Freelance Categorization / Image Annotation</h3>
@@ -58,7 +157,13 @@ const About = () => {
             </InfoCard>
 
             {/* Certifications Section */}
-            <InfoCard>
+            <InfoCard
+              whileHover={{ y: -5 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              viewport={{ once: true }}
+            >
               <InfoTitle>
                 <IconWrapper>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -75,6 +180,8 @@ const About = () => {
                   href="https://www.credly.com/badges/1ee3fbc7-9bd5-47d4-8d2a-3bf78e227f5f/public_url" 
                   target="_blank" 
                   rel="noopener noreferrer"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   View Credential
                 </CertificationLink>
@@ -107,6 +214,51 @@ const About = () => {
               </InfoItem>
             </InfoCard>
           </InfoGrid>
+
+          {/* Image Carousel Section */}
+          <CarouselSection
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            viewport={{ once: true }}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <CarouselTitle>Internship Moments</CarouselTitle>
+            <CarouselContainer>
+              <CarouselButton $direction="left" onClick={prevImage}>
+                <FiChevronLeft />
+              </CarouselButton>
+              
+              <CarouselImage>
+                <img 
+                  src={images[currentImageIndex].src} 
+                  alt={images[currentImageIndex].alt}
+                  style={{ objectFit: 'contain' }}
+                />
+                <CarouselCaption>
+                  {images[currentImageIndex].description}
+                  <CarouselIndicators>
+                    {images.map((_, index) => (
+                      <CarouselIndicator 
+                        key={index}
+                        $active={index === currentImageIndex}
+                        onClick={() => {
+                          setCurrentImageIndex(index);
+                          setIsAutoPlaying(false);
+                          setTimeout(() => setIsAutoPlaying(true), 5000);
+                        }}
+                      />
+                    ))}
+                  </CarouselIndicators>
+                </CarouselCaption>
+              </CarouselImage>
+              
+              <CarouselButton $direction="right" onClick={nextImage}>
+                <FiChevronRight />
+              </CarouselButton>
+            </CarouselContainer>
+          </CarouselSection>
         </AboutContent>
       </SectionContainer>
     </AboutSection>
@@ -114,13 +266,25 @@ const About = () => {
 };
 
 const AboutSection = styled.section`
-  padding: 6rem 0;
+  padding: 8rem 0;
   background: ${({ theme }) => theme.colors.backgroundAlt};
   position: relative;
   overflow: hidden;
 
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 50%, ${({ theme }) => theme.colors.primary}10, transparent 30%),
+                radial-gradient(circle at 80% 70%, ${({ theme }) => theme.colors.secondary}10, transparent 25%);
+    z-index: 0;
+  }
+
   @media (max-width: 768px) {
-    padding: 4rem 0;
+    padding: 5rem 0;
   }
 `;
 
@@ -136,13 +300,18 @@ const SectionContainer = styled.div`
   }
 `;
 
-const SectionTitle = styled.h2`
+const SectionTitle = styled(motion.h2)`
   text-align: center;
   margin-bottom: 5rem;
   font-size: clamp(2rem, 5vw, 3rem);
-  color: ${({ theme }) => theme.colors.primary};
   position: relative;
   font-weight: 700;
+  display: block;
+  width: 100%;
+  background: linear-gradient(90deg, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.secondary});
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: white;
 
   &::after {
     content: '';
@@ -157,6 +326,8 @@ const SectionTitle = styled.h2`
   @media (max-width: 768px) {
     margin-bottom: 3rem;
   }
+            background: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const AboutContent = styled.div`
@@ -165,7 +336,7 @@ const AboutContent = styled.div`
   gap: 4rem;
 `;
 
-const IntroText = styled.div`
+const IntroText = styled(motion.div)`
   text-align: center;
   max-width: 800px;
   margin: 0 auto;
@@ -176,10 +347,19 @@ const IntroText = styled.div`
   p {
     margin-bottom: 0;
     font-size: clamp(1rem, 2vw, 1.1rem);
+    background: ${({ theme }) => theme.colors.background};
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 5px 15px ${({ theme }) => theme.colors.shadow};
+    border: 1px solid ${({ theme }) => theme.colors.border};
   }
 
   @media (max-width: 768px) {
     text-align: left;
+    
+    p {
+      padding: 1.5rem;
+    }
   }
 `;
 
@@ -193,19 +373,20 @@ const InfoGrid = styled.div`
   }
 `;
 
-const InfoCard = styled.div`
+const InfoCard = styled(motion.div)`
   background: ${({ theme }) => theme.colors.background};
   border-radius: 16px;
   padding: 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 30px ${({ theme }) => theme.colors.shadow};
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   border: 1px solid ${({ theme }) => theme.colors.border};
   position: relative;
   overflow: hidden;
+  will-change: transform;
 
   &:hover {
     transform: translateY(-8px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 35px ${({ theme }) => theme.colors.shadowHover};
     border-color: ${({ theme }) => theme.colors.primary};
   }
 
@@ -228,12 +409,13 @@ const IconWrapper = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  background: ${({ theme }) => theme.colors.primaryLight};
-  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  background: ${({ theme }) => theme.colors.primary}20;
+  border-radius: 12px;
   margin-right: 12px;
   color: ${({ theme }) => theme.colors.primary};
+  backdrop-filter: blur(5px);
 
   svg {
     width: 20px;
@@ -282,11 +464,34 @@ const Company = styled.p`
   margin-bottom: 0.3rem !important;
 `;
 
+const Location = styled.p`
+  color: ${({ theme }) => theme.colors.textSecondary} !important;
+  font-size: 0.85rem !important;
+  margin-bottom: 0.5rem !important;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+
+  &::before {
+    content: '📍';
+    font-size: 0.9rem;
+  }
+`;
+
 const Duration = styled.p`
   color: ${({ theme }) => theme.colors.textSecondary} !important;
   font-size: 0.85rem !important;
   margin-bottom: 0.8rem !important;
   opacity: 0.9;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+
+  &::before {
+    content: '📅';
+    font-size: 0.9rem;
+  }
 `;
 
 const AchievementsList = styled.ul`
@@ -303,34 +508,175 @@ const AchievementsList = styled.ul`
     line-height: 1.5;
 
     &::before {
-      content: '';
+      content: '✓';
       position: absolute;
       left: 0;
-      top: 0.5rem;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: ${({ theme }) => theme.colors.primary};
+      color: ${({ theme }) => theme.colors.primary};
+      font-weight: bold;
     }
   }
 `;
 
-const CertificationLink = styled.a`
-  display: inline-block;
+const CertificationLink = styled(motion.a)`
+  display: inline-flex;
+  align-items: center;
   color: ${({ theme }) => theme.colors.primary};
   text-decoration: none;
   font-weight: 500;
   transition: all 0.2s ease;
-  padding: 0.3rem 0.8rem;
-  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
   background: ${({ theme }) => theme.colors.primaryLight};
   margin-top: 0.5rem;
+  font-size: 0.9rem;
+  gap: 0.5rem;
 
   &:hover {
     color: white;
     background: ${({ theme }) => theme.colors.primary};
     text-decoration: none;
-    transform: translateY(-2px);
+    box-shadow: 0 5px 15px ${({ theme }) => theme.colors.primary}30;
+  }
+
+  &::after {
+    content: '→';
+    transition: transform 0.2s ease;
+  }
+
+  &:hover::after {
+    transform: translateX(3px);
+  }
+`;
+
+const CarouselSection = styled(motion.div)`
+  margin-top: 3rem;
+  width: 100%;
+`;
+
+const CarouselTitle = styled.h3`
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  color: ${({ theme }) => theme.colors.primary};
+  position: relative;
+  display: inline-block;
+  left: 50%;
+  transform: translateX(-50%);
+
+  &::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: ${({ theme }) => theme.colors.primary};
+    margin: 0.8rem auto 0;
+    border-radius: 2px;
+  }
+`;
+
+const CarouselContainer = styled.div`
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+interface CarouselButtonProps {
+  $direction: 'left' | 'right';
+}
+
+const CarouselButton = styled.button<CarouselButtonProps>`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: ${({ theme }) => theme.colors.background};
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  color: ${({ theme }) => theme.colors.primary};
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primary};
+    color: white;
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  ${({ $direction }) => $direction === 'left' ? 'left: 10px;' : 'right: 10px;'}
+`;
+
+const CarouselImage = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  height: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+  }
+
+  @media (max-width: 768px) {
+    height: 300px;
+  }
+
+  @media (max-width: 480px) {
+    height: 250px;
+  }
+`;
+
+const CarouselCaption = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 1rem;
+`;
+
+const CarouselIndicators = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 0.5rem;
+`;
+
+interface CarouselIndicatorProps {
+  $active: boolean;
+}
+
+const CarouselIndicator = styled.div<CarouselIndicatorProps>`
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: ${({ $active, theme }) => 
+    $active ? theme.colors.primary : 'rgba(255, 255, 255, 0.5)'};
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.2);
   }
 `;
 

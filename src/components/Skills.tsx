@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { skills } from '../constants/data';
+import React from 'react';
 
 const SkillsSection = styled.section`
   padding: 5rem 0;
@@ -113,24 +114,36 @@ const SkillIcon = styled.div`
   align-items: center;
   height: 60px;
   font-size: 2.5rem;
-  
+  background: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.text};
+
   svg {
     width: 100%;
     height: 100%;
     max-width: 50px;
     max-height: 50px;
     color: ${({ theme }) => theme.colors.primary};
-    
-    /* Specific styling for GitHub/GitLab icons in dark mode */
-    path[fill="#181717"], /* GitHub logo color */
-    path[fill="#F05032"], /* GitLab logo color */
-    path[fill="#000000"], /* Any black paths */
-    path[fill="#010101"] { /* GitHub alternative black */
-      fill: ${({ theme }) => theme.colors.text};
+
+    /* GitHub icon specific styling */
+    &[data-icon="github"] {
+      path {
+        fill: ${({ theme }) => theme.title === 'dark' ? theme.colors.text : '#181717'};
+      }
+    }
+
+    /* GitLab icon specific styling */
+    &[data-icon="gitlab"] {
+      path {
+        fill: ${({ theme }) => theme.title === 'dark' ? '#FC6D26' : '#F05032'};
+      }
+    }
+
+    /* General dark mode adjustments for SVG icons */
+    path {
+      fill: currentColor;
     }
   }
 `;
-
 
 const SkillName = styled.h3`
   margin-bottom: 0.5rem;
@@ -150,10 +163,17 @@ const SkillDescription = styled.p`
   margin: 0;
 `;
 
+interface Skill {
+  name: string;
+  category: string;
+  description?: string;
+  icon: React.ReactNode | string;
+}
+
 export default function Skills() {
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
 
-  const categoryIcons = {
+  const categoryIcons: Record<string, string> = {
     'Programming Languages': '🧠',
     'Frontend Development': '🎨',
     'Backend Development': '🛠️',
@@ -175,15 +195,22 @@ export default function Skills() {
             
             <SkillsGrid>
               {skills
-                .filter(skill => skill.category === category)
-                .map((skill) => (
+                .filter((skill: Skill) => skill.category === category)
+                .map((skill: Skill) => (
                   <SkillCard
                     key={skill.name}
                     $isHovered={hoveredSkill === skill.name}
                     onMouseEnter={() => setHoveredSkill(skill.name)}
                     onMouseLeave={() => setHoveredSkill(null)}
                   >
-                    <SkillIcon>{skill.icon}</SkillIcon>
+                    <SkillIcon>
+                      {typeof skill.icon === 'object' ? 
+                        React.cloneElement(skill.icon as React.ReactElement, { 
+                          ...(skill.name.toLowerCase().includes('github') && { 'data-icon': 'github' }),
+                          ...(skill.name.toLowerCase().includes('gitlab') && { 'data-icon': 'gitlab' })
+                        }) : 
+                        skill.icon}
+                    </SkillIcon>
                     <SkillName>{skill.name}</SkillName>
                     {skill.description && (
                       <SkillDescription>{skill.description}</SkillDescription>

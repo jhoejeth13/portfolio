@@ -88,6 +88,10 @@ const Projects = () => {
           <span>Project Portfolio</span>
         </SectionTitle>
         
+        <SectionDescription>
+          Here are some of the projects I worked on during college. While I’m only able to share a few due to privacy restrictions, they reflect my learning and hands-on experience.
+        </SectionDescription>
+
         {!isMobile && (
           <CategoryTabs>
             {projectCategories.map((category, index) => (
@@ -285,6 +289,21 @@ const SectionTitle = styled.h2`
         right: -25px;
       }
     }
+  }
+`;
+
+const SectionDescription = styled.p`
+  text-align: center;
+  max-width: 700px;
+  margin: -2rem auto 3rem auto;
+  font-size: 1.1rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  line-height: 1.6;
+
+  @media (max-width: 768px) {
+    margin: -1.5rem auto 2rem auto;
+    padding: 0 1rem;
+    font-size: 1rem;
   }
 `;
 
@@ -530,7 +549,7 @@ const ProjectIndex = styled.span`
   padding: 0.2rem 0.6rem;
   border-radius: 20px;
   backdrop-filter: blur(5px);
-   background: ${({ theme }) => theme.colors.background};
+  background: ${({ theme }) => theme.colors.background};
   color: ${({ theme }) => theme.colors.text};
 `;
 
@@ -577,7 +596,7 @@ const CarouselButton = styled.button<{ position: 'left' | 'right' }>`
 const ArrowIcon = styled.span`
   display: inline-block;
   margin-top: -2px;
-   background: ${({ theme }) => theme.colors.background};
+  background: ${({ theme }) => theme.colors.background};
   color: ${({ theme }) => theme.colors.text};
 `;
 

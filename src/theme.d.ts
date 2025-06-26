@@ -4,6 +4,7 @@ import 'styled-components';
 declare module 'styled-components' {
   export interface DefaultTheme {
     colors: {
+      shadowHover: Interpolation<FastOmit<Omit<HTMLMotionProps<"div">, "ref"> & RefAttributes<HTMLDivElement>, never>>;
       shadow: Interpolation<Substitute<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, { $isHovered: boolean; }>>;
       secondary: Interpolation<FastOmit<DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>, never>>;
       border: Interpolation<FastOmit<DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>, never>>;
@@ -22,5 +23,23 @@ declare module 'styled-components' {
       techBg: string;
     };
     sectionBg: string;
+  }
+}
+// styled.d.ts
+import 'styled-components';
+
+declare module 'styled-components' {
+  export interface DefaultTheme {
+    title: 'light' | 'dark';
+    colors: {
+      backgroundAlt: string;
+      text: string;
+      textSecondary: string;
+      primary: string;
+      secondary: string;
+      background: string;
+      border: string;
+      shadow: string;
+    };
   }
 }

@@ -103,6 +103,8 @@ const Logo = styled.a`
   @media (max-width: 768px) {
     font-size: 1.5rem;
   }
+    background: ${({ theme }) => theme.colors.background};
+      color: ${({ theme }) => theme.colors.text};
 `;
 
 const DesktopNavLinks = styled.div`

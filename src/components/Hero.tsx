@@ -16,7 +16,9 @@ const Hero = () => {
             <Title>Jhoejeth Layos Mondejar</Title>
             <Role>Aspiring Web Developer</Role>
 <Description>
-Fresh graduate driven to craft <Highlight>smart</Highlight> and <Highlight>impactful</Highlight> systems that turn ideas into real-world solutions.
+<p>
+  Passionate about building <Highlight>practical</Highlight>, <Highlight>efficient</Highlight> systems that solve real problems and make a meaningful impact through technology — while continuously learning and growing as a <Highlight>developer</Highlight>.
+</p>
 </Description>
 
             <ButtonGroup>
@@ -27,15 +29,15 @@ Fresh graduate driven to craft <Highlight>smart</Highlight> and <Highlight>impac
               >
                 View My Work
               </CTAButton>
-              {/* <DownloadButton 
-                href="/CV/Mondejar, Jhoejeth L. - CV.pdf" 
+              { <DownloadButton 
+                href="/CV/Mondejar, Jhoejeth L. - CV (2).pdf"  
                 download="Jhoejeth_Mondejar_CV.pdf"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <FiDownload style={{ marginRight: '8px' }} />
                 Download CV
-              </DownloadButton> */}
+              </DownloadButton> }
             </ButtonGroup>
 
             <SocialLinks>
@@ -308,6 +310,8 @@ const SocialLink = styled(motion.a)`
     transform: translateY(-3px);
     background: ${({ theme }) => theme.colors.primaryLight};
   }
+            background: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const PhotoContainer = styled.div`
