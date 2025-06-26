@@ -610,6 +610,8 @@ const CarouselButton = styled.button<CarouselButtonProps>`
     color: white;
     transform: translateY(-50%) scale(1.1);
   }
+            background: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.text};
 
   ${({ $direction }) => $direction === 'left' ? 'left: 10px;' : 'right: 10px;'}
 `;
