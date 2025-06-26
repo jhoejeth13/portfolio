@@ -68,7 +68,7 @@ const Hero = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <ProfilePhoto 
-              src="/profile.jpg" 
+              src="/try.png" 
               alt="Jhoejeth Mondejar" 
               whileHover={{ scale: 1.02 }}
             />
