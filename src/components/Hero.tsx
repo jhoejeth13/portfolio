@@ -14,11 +14,10 @@ const Hero = () => {
           >
             <Subtitle>Hi, I'm</Subtitle>
             <Title>Jhoejeth Layos Mondejar</Title>
-            <Role>Aspiring Web Developer</Role>
+            <Role>Web Developer in Progress</Role>
 <Description>
 <p>
-  Passionate about building <Highlight>practical</Highlight>, <Highlight>efficient</Highlight> systems that solve real problems and make a meaningful impact through technology — while continuously learning and growing as a <Highlight>developer</Highlight>.
-</p>
+Passionate about building <Highlight>practical</Highlight>, <Highlight>efficient</Highlight> systems that solve real problems and make a meaningful impact through technology — while continuously learning and growing as a <Highlight>developer</Highlight>.</p>
 </Description>
 
             <ButtonGroup>

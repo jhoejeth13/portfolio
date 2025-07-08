@@ -17,9 +17,16 @@ export const lightTheme: DefaultTheme = {
     border: undefined,
     primaryLight: undefined,
     secondary: undefined,
-    shadow: undefined
+    shadow: undefined,
+    textTertiary: undefined,
+    textPrimary: undefined,
+    backgroundLight: undefined,
+    backgroundLighter: undefined,
+    backgroundAlt2: undefined,
+    shadowHover: undefined
   },
-  sectionBg: '#ffffff'
+  sectionBg: '#ffffff',
+  title: 'light'
 };
 
 export const darkTheme: DefaultTheme = {
@@ -38,7 +45,15 @@ export const darkTheme: DefaultTheme = {
     primaryLight: undefined,
     secondary: '#535bf2',
     shadow: undefined,
-    primaryDark: undefined
+    primaryDark: undefined,
+    textTertiary: undefined,
+    textPrimary: undefined,
+    backgroundLight: undefined,
+    backgroundLighter: undefined,
+    backgroundAlt2: undefined,
+    shadowHover: undefined
   },
-  sectionBg: '#121212'  // Dark background
+  sectionBg: '#121212' // Dark background
+  ,
+  title: 'light'
 };

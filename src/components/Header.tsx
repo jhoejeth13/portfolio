@@ -32,16 +32,16 @@ const Header = ({ toggleTheme, theme }: HeaderProps) => {
         transition={{ duration: 0.5 }}
       >
         <Nav>
-          <Logo href="#home">Portfolio</Logo>
+          <Logo href="#home">Jeth Dev</Logo>
           
           <DesktopNavLinks>
             <NavLink href="#about">About</NavLink>
             <NavLink href="#skills">Skills</NavLink>
             <NavLink href="#projects">Projects</NavLink>
             <NavLink href="#contact">Contact</NavLink>
-            <ThemeToggleButton onClick={toggleTheme} aria-label="Toggle theme">
+            {/* <ThemeToggleButton onClick={toggleTheme} aria-label="Toggle theme">
               {theme === 'light' ? <FiMoon size={20} /> : <FiSun size={20} />}
-            </ThemeToggleButton>
+            </ThemeToggleButton> */}
           </DesktopNavLinks>
 
           <MobileMenuButton onClick={toggleMobileMenu} aria-label="Menu">

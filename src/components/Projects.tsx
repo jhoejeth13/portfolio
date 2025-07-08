@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
-import styled, { css } from 'styled-components';
+import { useState, useEffect, useRef } from 'react';
+import styled, { css, keyframes } from 'styled-components';
+import { motion, AnimatePresence } from 'framer-motion';
+import ReactModal from 'react-modal';
 
 const projectCategories = [
   {
-    name: "Graduates and Alumni Database System",
+    name: "Graduates and Alumni DB System",
     description: "A centralized platform using K-means clustering to manage alumni records and evaluate institutional impact through graduate tracer data.",
     projects: [
       { id: 1, image: "/FuamiScreenshots/1.png", tags: ["Laravel", "Blade", "PHP", "MySQL", "JavaScript", "Tailwind CSS"] },
@@ -41,21 +43,7 @@ const projectCategories = [
     ]
   },
   {
-    name: "Online-Food-Ordering-System",
-    description: "This Online Food Ordering System project in PHP focuses mainly on managing online food orders. The system helps to keep track of clients and their orders, and displays all available food dishes with their respective restaurants.",
-    projects: [
-      { id: 21, image: "/eCommerce/1.png", tags: ["PHP", "JavaScript", "CSS", "MySQL", "Bootstrap"] },
-      { id: 22, image: "/eCommerce/2.png", tags: ["PHP", "JavaScript", "CSS", "MySQL", "Bootstrap"] },
-      { id: 23, image: "/eCommerce/3.png", tags: ["PHP", "JavaScript", "CSS", "MySQL", "Bootstrap"] },
-      { id: 24, image: "/eCommerce/4.png", tags: ["PHP", "JavaScript", "CSS", "MySQL", "Bootstrap"] },
-      { id: 25, image: "/eCommerce/5.png", tags: ["PHP", "JavaScript", "CSS", "MySQL", "Bootstrap"] },
-      { id: 26, image: "/eCommerce/6.png", tags: ["PHP", "JavaScript", "CSS", "MySQL", "Bootstrap"] },
-      { id: 27, image: "/eCommerce/7.png", tags: ["PHP", "JavaScript", "CSS", "MySQL", "Bootstrap"] },
-      { id: 28, image: "/eCommerce/8.png", tags: ["PHP", "JavaScript", "CSS", "MySQL", "Bootstrap"] },
-    ]
-  },
-  {
-    name: "ANALYZE THE TIME OF DAY WHEN EARTHQUAKES ARE MOST LIKELY TO OCCUR",
+    name: "Earthquake Occurrence Analysis",
     description: "This project investigates the temporal behavior of earthquakes in the Philippines, focusing specifically on identifying the hours of the day when seismic events most frequently occur. The study utilizes a historical earthquake dataset and implements a Python-based analytical pipeline built on the Streamlit framework.",
     projects: [
       { id: 29, image: "/Earthquake/1.png", tags: ["Python", "Streamlit", "Pandas", "Plotly", "Pydeck and Folium"] },
@@ -70,10 +58,15 @@ const projectCategories = [
 const Projects = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [activeCategory, setActiveCategory] = useState(0);
+  const [isHovering, setIsHovering] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Set app element when component mounts
+    ReactModal.setAppElement('#root');
+    
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < 1024);
     };
 
     handleResize();
@@ -82,15 +75,18 @@ const Projects = () => {
   }, []);
 
   return (
-    <ProjectsSection id="projects">
+    <ProjectsSection ref={sectionRef} id="projects">
+      <BackgroundPattern />
       <SectionContainer>
-        <SectionTitle>
-          <span>Project Portfolio</span>
-        </SectionTitle>
-        
-        <SectionDescription>
-          Here are some of the projects I worked on during college. While I’m only able to share a few due to privacy restrictions, they reflect my learning and hands-on experience.
-        </SectionDescription>
+        <HeaderContainer>
+          <SectionTitle>
+            <span>Project Portfolio</span>
+          </SectionTitle>
+          
+          <SectionDescription>
+            Here are some of the projects I worked on during college. While I'm only able to share a few due to privacy restrictions, they reflect my learning and hands-on experience.
+          </SectionDescription>
+        </HeaderContainer>
 
         {!isMobile && (
           <CategoryTabs>
@@ -99,60 +95,73 @@ const Projects = () => {
                 key={category.name}
                 $active={activeCategory === index}
                 onClick={() => setActiveCategory(index)}
+                onMouseEnter={() => setIsHovering(true)}
+                onMouseLeave={() => setIsHovering(false)}
               >
                 {category.name}
+                <TabHighlight $active={activeCategory === index} $isHovering={isHovering} />
               </TabButton>
             ))}
           </CategoryTabs>
         )}
 
-        {isMobile ? (
-          <MobileProjectViewer>
-            {projectCategories.map((category, index) => (
-              <ProjectCategory key={category.name}>
-                <CategoryContent>
-                  <CategoryHeader>
-                    <CategoryTitle>{category.name}</CategoryTitle>
-                    <CategoryDescription>{category.description}</CategoryDescription>
-                  </CategoryHeader>
-                  
-                  <TechStack>
-                    <h4>Technology Stack:</h4>
-                    <TechPills>
-                      {category.projects[0].tags.map((tag) => (
-                        <TechPill key={tag}>{tag}</TechPill>
-                      ))}
-                    </TechPills>
-                  </TechStack>
-                </CategoryContent>
+        <ProjectViewerContainer>
+          {isMobile ? (
+            <MobileProjectViewer>
+              {projectCategories.map((category, index) => (
+                <ProjectCategory key={category.name}>
+                  <CategoryContent>
+                    <CategoryHeader>
+                      <CategoryTitle>{category.name}</CategoryTitle>
+                      <CategoryDescription>{category.description}</CategoryDescription>
+                    </CategoryHeader>
+                    
+                    <TechStack>
+                      <h4>Technology Stack</h4>
+                      <TechPills>
+                        {category.projects[0].tags.map((tag) => (
+                          <TechPill key={tag}>{tag}</TechPill>
+                        ))}
+                      </TechPills>
+                    </TechStack>
+                  </CategoryContent>
 
-                <ProjectCarousel category={category} />
-              </ProjectCategory>
-            ))}
-          </MobileProjectViewer>
-        ) : (
-          <DesktopProjectViewer>
-            <ProjectCategory key={projectCategories[activeCategory].name}>
-              <CategoryContent>
-                <CategoryHeader>
-                  <CategoryTitle>{projectCategories[activeCategory].name}</CategoryTitle>
-                  <CategoryDescription>{projectCategories[activeCategory].description}</CategoryDescription>
-                </CategoryHeader>
-                
-                <TechStack>
-                  <h4>Technology Stack:</h4>
-                  <TechPills>
-                    {projectCategories[activeCategory].projects[0].tags.map((tag) => (
-                      <TechPill key={tag}>{tag}</TechPill>
-                    ))}
-                  </TechPills>
-                </TechStack>
-              </CategoryContent>
+                  <ProjectCarousel category={category} />
+                </ProjectCategory>
+              ))}
+            </MobileProjectViewer>
+          ) : (
+            <DesktopProjectViewer>
+              <AnimatePresence mode="wait">
+                <ProjectCategory 
+                  key={projectCategories[activeCategory].name}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                >
+                  <CategoryContent>
+                    <CategoryHeader>
+                      <CategoryTitle>{projectCategories[activeCategory].name}</CategoryTitle>
+                      <CategoryDescription>{projectCategories[activeCategory].description}</CategoryDescription>
+                    </CategoryHeader>
+                    
+                    <TechStack>
+                      <h4>Technology Stack</h4>
+                      <TechPills>
+                        {projectCategories[activeCategory].projects[0].tags.map((tag) => (
+                          <TechPill key={tag}>{tag}</TechPill>
+                        ))}
+                      </TechPills>
+                    </TechStack>
+                  </CategoryContent>
 
-              <ProjectCarousel category={projectCategories[activeCategory]} />
-            </ProjectCategory>
-          </DesktopProjectViewer>
-        )}
+                  <ProjectCarousel category={projectCategories[activeCategory]} />
+                </ProjectCategory>
+              </AnimatePresence>
+            </DesktopProjectViewer>
+          )}
+        </ProjectViewerContainer>
       </SectionContainer>
     </ProjectsSection>
   );
@@ -160,67 +169,171 @@ const Projects = () => {
 
 const ProjectCarousel = ({ category }: { category: typeof projectCategories[0] }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   const nextSlide = () => {
+    setDirection(1);
     setCurrentIndex((prevIndex) => 
       prevIndex === category.projects.length - 1 ? 0 : prevIndex + 1
     );
   };
 
   const prevSlide = () => {
+    setDirection(-1);
     setCurrentIndex((prevIndex) => 
       prevIndex === 0 ? category.projects.length - 1 : prevIndex - 1
     );
   };
 
+  const goToSlide = (index: number) => {
+    setDirection(index > currentIndex ? 1 : -1);
+    setCurrentIndex(index);
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // Auto-advance slides
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      nextSlide();
+    }, 5000);
+    
+    return () => clearTimeout(timer);
+  }, [currentIndex]);
+
   return (
-    <CarouselContainer>
-      <CarouselButton onClick={prevSlide} position="left">
-        <ArrowIcon>&lt;</ArrowIcon>
-      </CarouselButton>
-      
-      <CarouselSlide>
-        <ProjectCard>
-          <ProjectImage 
-            src={category.projects[currentIndex].image} 
-            alt={`${category.name} screenshot`}
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = '/default-project.jpg';
-            }}
-          />
-          <ProjectOverlay>
-            <ProjectTitle>{category.name}</ProjectTitle>
-            <ProjectIndex>{currentIndex + 1}/{category.projects.length}</ProjectIndex>
-          </ProjectOverlay>
-        </ProjectCard>
-      </CarouselSlide>
+    <>
+      <CarouselContainer ref={carouselRef}>
+        <CarouselButton onClick={prevSlide} position="left" aria-label="Previous slide">
+          <ArrowIcon>&lt;</ArrowIcon>
+        </CarouselButton>
+        
+        <CarouselSlide>
+          <AnimatePresence custom={direction}>
+            <ProjectCard
+              key={currentIndex}
+              custom={direction}
+              initial={{ opacity: 0, x: direction === 1 ? 100 : -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: direction === 1 ? -100 : 100 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+            >
+              <ProjectImage 
+                src={category.projects[currentIndex].image} 
+                alt={`${category.name} ${currentIndex + 1}`}
+                onClick={openModal}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/default-project.jpg';
+                }}
+              />
+              <ProjectOverlay>
+                <div>
+                  <ProjectTitle onClick={openModal}>{category.name}</ProjectTitle>
+                  <ProjectSubtitle> {currentIndex + 1}/{category.projects.length}</ProjectSubtitle>
+                </div>
+                <ProjectIndex>
+                  <span>{currentIndex + 1}</span> / {category.projects.length}
+                </ProjectIndex>
+              </ProjectOverlay>
+            </ProjectCard>
+          </AnimatePresence>
+        </CarouselSlide>
 
-      <CarouselButton onClick={nextSlide} position="right">
-        <ArrowIcon>&gt;</ArrowIcon>
-      </CarouselButton>
+        <CarouselButton onClick={nextSlide} position="right" aria-label="Next slide">
+          <ArrowIcon>&gt;</ArrowIcon>
+        </CarouselButton>
 
-      <CarouselDots>
-        {category.projects.map((_, index) => (
-          <Dot 
-            key={index} 
-            $active={index === currentIndex}
-            onClick={() => setCurrentIndex(index)}
-          />
-        ))}
-      </CarouselDots>
-    </CarouselContainer>
+        <CarouselDots>
+          {category.projects.map((_, index) => (
+            <Dot 
+              key={index} 
+              $active={index === currentIndex}
+              onClick={() => goToSlide(index)}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </CarouselDots>
+      </CarouselContainer>
+
+      <ReactModal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Project Image Modal"
+        style={{
+          overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            zIndex: 1000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          content: {
+            position: 'relative',
+            inset: 'auto',
+            border: 'none',
+            background: 'transparent',
+            overflow: 'visible',
+            WebkitOverflowScrolling: 'touch',
+            borderRadius: '0',
+            padding: '0',
+            maxWidth: '90vw',
+            maxHeight: '90vh',
+            width: 'auto',
+            height: 'auto',
+          }
+        }}
+        ariaHideApp={true}
+        parentSelector={() => document.body}
+      >
+        <ModalImage 
+          src={category.projects[currentIndex].image} 
+          alt={`${category.name} screenshot ${currentIndex + 1}`}
+          onClick={(e) => e.stopPropagation()}
+        />
+        <ModalCloseButton onClick={closeModal}>
+          &times;
+        </ModalCloseButton>
+      </ReactModal>
+    </>
   );
 };
 
+// Styled Components
 const ProjectsSection = styled.section`
-  padding: 8rem 0;
+  padding: 10rem 0;
   background: ${({ theme }) => theme.colors.backgroundAlt};
   position: relative;
   overflow: hidden;
+  isolation: isolate;
+
+  @media (max-width: 1024px) {
+    padding: 6rem 0;
+  }
 
   @media (max-width: 768px) {
     padding: 4rem 0;
   }
+`;
+
+const BackgroundPattern = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(100, 100, 255, 0.05) 0%, transparent 20%),
+    radial-gradient(circle at 80% 70%, rgba(255, 100, 100, 0.05) 0%, transparent 20%);
+  z-index: -1;
+  opacity: 0.5;
 `;
 
 const SectionContainer = styled.div`
@@ -235,75 +348,60 @@ const SectionContainer = styled.div`
   }
 `;
 
-const SectionTitle = styled.h2`
+const HeaderContainer = styled.div`
   text-align: center;
-  margin-bottom: 4rem;
-  font-size: clamp(2rem, 5vw, 3rem);
-  color: ${({ theme }) => theme.colors.text};
+  max-width: 800px;
+  margin: 0 auto 4rem;
   position: relative;
-  font-weight: 700;
+
+  @media (max-width: 768px) {
+    margin-bottom: 3rem;
+  }
+`;
+
+const SectionTitle = styled(motion.h2)`
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: ${({ theme }) => theme.colors.text};
+  font-weight: 800;
+  line-height: 1.2;
+  position: relative;
+  display: inline-block;
 
   span {
     position: relative;
     display: inline-block;
-    padding: 0 1.5rem;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    padding: 0 0.5rem;
 
-    &::before,
     &::after {
       content: '';
       position: absolute;
-      top: 50%;
-      width: clamp(30px, 5vw, 60px);
-      height: 3px;
-      background: linear-gradient(
-        90deg, 
-        ${({ theme }) => theme.colors.primary}, 
-        ${({ theme }) => theme.colors.secondary}
-      );
-      transform: translateY(-50%);
-    }
-
-    &::before {
-      left: clamp(-30px, -5vw, -60px);
-    }
-
-    &::after {
-      right: clamp(-30px, -5vw, -60px);
-    }
-  }
-
-  @media (max-width: 480px) {
-    margin-bottom: 2.5rem;
-    
-    span {
-      &::before,
-      &::after {
-        width: 20px;
-      }
-      
-      &::before {
-        left: -25px;
-      }
-      
-      &::after {
-        right: -25px;
-      }
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 4px;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+      border-radius: 2px;
     }
   }
 `;
 
 const SectionDescription = styled.p`
-  text-align: center;
-  max-width: 700px;
-  margin: -2rem auto 3rem auto;
   font-size: 1.1rem;
   color: ${({ theme }) => theme.colors.textSecondary};
-  line-height: 1.6;
+  line-height: 1.7;
+  margin: 0 auto;
+  opacity: 0.9;
 
   @media (max-width: 768px) {
-    margin: -1.5rem auto 2rem auto;
-    padding: 0 1rem;
     font-size: 1rem;
+    padding: 0 1rem;
   }
 `;
 
@@ -311,78 +409,85 @@ const CategoryTabs = styled.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.5rem;
   margin-bottom: 3rem;
   padding: 0 1rem;
+  position: relative;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     display: none;
   }
 `;
 
 const TabButton = styled.button<{ $active: boolean }>`
-  padding: 0.8rem 1.5rem;
-  border-radius: 50px;
+  padding: 0.8rem 1.8rem;
+  border-radius: 8px;
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
   border: none;
   white-space: nowrap;
+  position: relative;
   overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 300px;
+  background: transparent;
+  color: ${({ $active, theme }) => 
+    $active ? theme.colors.primary : theme.colors.textSecondary};
+  z-index: 1;
 
-  ${({ $active, theme }) => $active 
-    ? css`
-        background: ${theme.colors.primary};
-        color: black;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      `
-    : css`
-        background: ${theme.colors.background};
-        color: ${theme.colors.text};
-        border: 1px solid ${theme.colors.border};
-        
-        &:hover {
-          background: ${theme.colors.primaryLight};
-          color: ${theme.colors.primary};
-        }
-      `}
-
-  @media (max-width: 1024px) {
-    padding: 0.7rem 1.2rem;
-    font-size: 0.9rem;
-    max-width: 200px;
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary};
   }
+`;
+
+const TabHighlight = styled.span<{ $active: boolean; $isHovering: boolean }>`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: ${({ theme }) => theme.colors.primary};
+  transform: scaleX(${({ $active }) => $active ? 1 : 0});
+  transform-origin: center;
+  transition: transform 0.3s ease;
+  z-index: -1;
+
+  ${({ $isHovering }) => $isHovering && css`
+    transform: scaleX(0.5);
+  `}
+`;
+
+const ProjectViewerContainer = styled.div`
+  position: relative;
+  padding: 2rem 0;
 `;
 
 const MobileProjectViewer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4rem;
+  gap: 5rem;
 
-  @media (min-width: 769px) {
+  @media (min-width: 1025px) {
     display: none;
   }
 `;
 
 const DesktopProjectViewer = styled.div`
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     display: none;
   }
 `;
 
-const ProjectCategory = styled.div`
+const ProjectCategory = styled(motion.div)`
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 3rem;
   margin-bottom: 4rem;
 
-  @media (min-width: 769px) {
+  @media (min-width: 1025px) {
     flex-direction: row;
     align-items: center;
-    gap: 3rem;
+    gap: 4rem;
     margin-bottom: 6rem;
 
     &:nth-child(odd) {
@@ -399,7 +504,7 @@ const CategoryContent = styled.div`
   flex: 1;
   text-align: center;
 
-  @media (min-width: 769px) {
+  @media (min-width: 1025px) {
     text-align: left;
     padding: 0 2rem;
   }
@@ -410,69 +515,76 @@ const CategoryHeader = styled.div`
 `;
 
 const CategoryTitle = styled.h3`
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  margin-bottom: 1rem;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  margin-bottom: 1.5rem;
   color: ${({ theme }) => theme.colors.text};
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.3;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  display: inline-block;
 `;
 
 const CategoryDescription = styled.p`
   font-size: clamp(1rem, 1.1vw, 1.1rem);
   color: ${({ theme }) => theme.colors.textSecondary};
-  line-height: 1.7;
+  line-height: 1.8;
   margin-bottom: 1.5rem;
+  opacity: 0.9;
 `;
 
 const TechStack = styled.div`
-  margin-top: 2rem;
+  margin-top: 2.5rem;
 
   h4 {
     font-size: 1rem;
-    margin-bottom: 0.8rem;
+    margin-bottom: 1rem;
     color: ${({ theme }) => theme.colors.text};
-    font-weight: 500;
+    font-weight: 600;
+    opacity: 0.9;
   }
 `;
 
 const TechPills = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.6rem;
   justify-content: center;
 
-  @media (min-width: 769px) {
+  @media (min-width: 1025px) {
     justify-content: flex-start;
   }
 `;
 
-const TechPill = styled.span`
-  background: ${({ theme }) => theme.colors.primaryLight};
+const TechPill = styled(motion.span).attrs(() => ({
+  whileHover: { y: -2 },
+  whileTap: { scale: 0.95 }
+}))`
+  background: ${({ theme }) => theme.colors.background};
   color: ${({ theme }) => theme.colors.primary};
-  padding: 0.4rem 1rem;
-  border-radius: 50px;
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
   font-size: 0.85rem;
   font-weight: 500;
-  transition: all 0.2s ease;
-  border: 1px solid ${({ theme }) => theme.colors.primary}20;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 2px 8px rgba(121, 103, 103, 0.1);
-    background: ${({ theme }) => theme.colors.primary};
-    color: white;
-  }
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  cursor: default;
 `;
 
 const CarouselContainer = styled.div`
   position: relative;
   flex: 1;
-  max-width: 700px;
+  max-width: 800px;
   margin: 0 auto;
   width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
 
-  @media (min-width: 769px) {
-    min-width: 500px;
+  @media (min-width: 1025px) {
+    min-width: 600px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   }
 `;
 
@@ -482,6 +594,9 @@ const CarouselSlide = styled.div`
   align-items: center;
   margin: 0 auto;
   width: 100%;
+  height: 100%;
+  position: relative;
+  aspect-ratio: 16/9;
 `;
 
 const ProjectOverlay = styled.div`
@@ -489,39 +604,25 @@ const ProjectOverlay = styled.div`
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
-  padding: 1.5rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+  padding: 2rem;
   color: white;
-  opacity: 1;
-  transition: opacity 0.3s ease;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-
-  @media (min-width: 769px) {
-    opacity: 0;
-  }
+  z-index: 2;
 `;
 
-const ProjectCard = styled.article`
+const ProjectCard = styled(motion.article)`
   background: ${({ theme }) => theme.colors.background};
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  position: relative;
   border: 1px solid ${({ theme }) => theme.colors.border};
   aspect-ratio: 16/9;
-  position: relative;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-    
-    ${ProjectOverlay} {
-      opacity: 1;
-    }
-  }
 `;
 
 const ProjectImage = styled.img`
@@ -529,38 +630,66 @@ const ProjectImage = styled.img`
   height: 100%;
   object-fit: cover;
   display: block;
+  cursor: zoom-in;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.02);
+  }
 `;
 
 const ProjectTitle = styled.h4`
-  font-size: 1rem;
-  font-weight: 500;
-  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
   color: white;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
 
-  @media (min-width: 480px) {
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+`;
+
+const ProjectSubtitle = styled.span`
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
+`;
+
+const ProjectIndex = styled.div`
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  span {
+    font-weight: 700;
+    color: white;
     font-size: 1.1rem;
   }
 `;
 
-const ProjectIndex = styled.span`
-  font-size: 0.9rem;
-  background: rgba(102, 100, 100, 0.2);
-  padding: 0.2rem 0.6rem;
-  border-radius: 20px;
-  backdrop-filter: blur(5px);
-  background: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.text};
-`;
-
-const CarouselButton = styled.button<{ position: 'left' | 'right' }>`
+const CarouselButton = styled(motion.button).attrs(() => ({
+  whileHover: { scale: 1.1 },
+  whileTap: { scale: 0.9 }
+}))<{ position: 'left' | 'right' }>`
   position: absolute;
   top: 50%;
-  ${({ position }) => position === 'left' ? 'left: -20px' : 'right: -20px'};
+  ${({ position }) => position === 'left' ? 'left: 20px' : 'right: 20px'};
   transform: translateY(-50%);
-  background: ${({ theme }) => theme.colors.background};
+  background: rgba(255, 255, 255, 0.9);
   color: ${({ theme }) => theme.colors.primary};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  border: none;
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -570,34 +699,18 @@ const CarouselButton = styled.button<{ position: 'left' | 'right' }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   
-  &:hover {
-    background: ${({ theme }) => theme.colors.primary};
-    color: white;
-    transform: translateY(-50%) scale(1.1);
-  }
-
   @media (max-width: 768px) {
     width: 40px;
     height: 40px;
-    ${({ position }) => position === 'left' ? 'left: -10px' : 'right: -10px'};
     font-size: 1rem;
-  }
-
-  @media (max-width: 480px) {
-    width: 36px;
-    height: 36px;
-    ${({ position }) => position === 'left' ? 'left: -5px' : 'right: -5px'};
   }
 `;
 
 const ArrowIcon = styled.span`
   display: inline-block;
   margin-top: -2px;
-  background: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.text};
 `;
 
 const CarouselDots = styled.div`
@@ -607,19 +720,53 @@ const CarouselDots = styled.div`
   gap: 0.8rem;
 `;
 
-const Dot = styled.div<{ $active: boolean }>`
-  width: 12px;
+const Dot = styled(motion.div).attrs(() => ({
+  whileHover: { scale: 1.2 },
+  whileTap: { scale: 0.9 }
+}))<{ $active: boolean }>`
+  width: ${({ $active }) => $active ? '20px' : '12px'};
   height: 12px;
-  border-radius: 50%;
+  border-radius: 6px;
   background: ${({ $active, theme }) => 
     $active ? theme.colors.primary : theme.colors.textSecondary};
   cursor: pointer;
-  transition: all 0.3s ease;
   opacity: ${({ $active }) => $active ? 1 : 0.6};
+  transition: all 0.3s ease;
+`;
+
+const ModalImage = styled.img`
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+`;
+
+const ModalCloseButton = styled.button`
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
 
   &:hover {
-    transform: scale(1.2);
-    opacity: 1;
+    background: white;
+    transform: scale(1.1);
+  }
+
+  @media (max-width: 768px) {
+    top: -50px;
+    right: 0;
   }
 `;
 

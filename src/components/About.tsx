@@ -1,23 +1,24 @@
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
+import { FiChevronLeft, FiChevronRight, FiExternalLink } from 'react-icons/fi';
+import { FaGraduationCap, FaCertificate, FaLaptopCode } from 'react-icons/fa';
 
 const About = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [direction, setDirection] = useState(1); // 1 for forward, -1 for backward
 
   const images = [
     {
       src: "/intern/2.jpg",
       alt: "Internship moment",
-       description: "SOS 10th Year Anniversary and 2024 Year-End Glitz & Glam Party "
-
+      description: "SOS 10th Year Anniversary and 2024 Year-End Glitz & Glam Party"
     },
     {
       src: "/intern/11.jpg",
       alt: "Internship moment",
-      description: "SOS 10th Year Anniversary and 2024 Year-End Glitz & Glam Party "
+      description: "SOS 10th Year Anniversary and 2024 Year-End Glitz & Glam Party"
     },
     {
       src: "/intern/7.jpg",
@@ -39,7 +40,7 @@ const About = () => {
       alt: "Team photo",
       description: "Project demo presentation with the team"    
     },
-        {
+    {
       src: "/intern/7.jpeg",
       alt: "Team photo",
       description: "Project demo presentation with the team"    
@@ -62,45 +63,79 @@ const About = () => {
     {
       src: "/intern/5.jpg",
       alt: "Team photo",
-      description:"Group photo with the internship team and Supervisor"
+      description: "Group photo with the internship team and Supervisor"
     }
   ];
 
-  // Autoplay effect
+  const nextImage = useCallback(() => {
+    setDirection(1);
+    setCurrentImageIndex(prevIndex => 
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
+    setIsAutoPlaying(false);
+    setTimeout(() => setIsAutoPlaying(true), 10000);
+  }, [images.length]);
+
+  const prevImage = useCallback(() => {
+    setDirection(-1);
+    setCurrentImageIndex(prevIndex => 
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+    );
+    setIsAutoPlaying(false);
+    setTimeout(() => setIsAutoPlaying(true), 10000);
+  }, []);
+
+  // Autoplay effect with pause on hover
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     
     if (isAutoPlaying) {
       intervalId = setInterval(() => {
-        setCurrentImageIndex((prevIndex) => 
-          prevIndex === images.length - 1 ? 0 : prevIndex + 1
-        );
-      }, 3000); // Change image every 3 seconds
+        nextImage();
+      }, 5000); // Change image every 5 seconds
     }
 
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
-  }, [isAutoPlaying, images.length]);
+  }, [isAutoPlaying, nextImage]);
 
-  const nextImage = () => {
-    setCurrentImageIndex((prevIndex) => 
-      prevIndex === images.length - 1 ? 0 : prevIndex + 1
-    );
+  const goToImage = (index: number) => {
+    setDirection(index > currentImageIndex ? 1 : -1);
+    setCurrentImageIndex(index);
     setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 5000);
+    setTimeout(() => setIsAutoPlaying(true), 10000);
   };
 
-  const prevImage = () => {
-    setCurrentImageIndex((prevIndex) => 
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
-    );
-    setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 5000);
-  };
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'ArrowRight') {
+      nextImage();
+    } else if (e.key === 'ArrowLeft') {
+      prevImage();
+    }
+  }, [nextImage, prevImage]);
 
-  const handleMouseEnter = () => setIsAutoPlaying(false);
-  const handleMouseLeave = () => setIsAutoPlaying(true);
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleKeyDown]);
+
+  const variants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 500 : -500,
+      opacity: 0
+    }),
+    center: {
+      x: 0,
+      opacity: 1
+    },
+    exit: (direction: number) => ({
+      x: direction < 0 ? 500 : -500,
+      opacity: 0
+    })
+  };
 
   return (
     <AboutSection id="about">
@@ -109,21 +144,62 @@ const About = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-100px" }}
         >
           About Me
+          <TitleUnderline />
         </SectionTitle>
 
         <AboutContent>
-          <IntroText
+          <IntroContainer
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
           >
-            <p>
-I’m a dedicated IT graduate with a passion for turning ideas into real-world solutions. Over the past few years, I’ve built a strong foundation in web and mobile development, explored cloud technologies, and worked with API integrations. Through these experiences, I’ve developed essential skills in problem-solving, adaptability, and collaboration. Now, I’m eager to take the next step in my journey—continuing to grow, learn, and contribute meaningfully in the tech industry.            </p>
-          </IntroText>
+            <IntroText>
+              <p>
+                I'm a quiet but driven IT graduate who enjoys turning ideas into simple, meaningful tech solutions. During my academic journey and internship experience, I've worked on web and mobile development projects, explored cloud tools, and used APIs to build practical systems — all while learning a lot along the way.
+              </p>
+              <p>
+                I may not be the loudest in the room, but I'm someone who listens closely, thinks deeply, and shows up with consistency. I take pride in improving through patience, problem-solving, and staying committed to what I start. I care about doing things right — not just in code, but in the way I work with others and approach every project.
+              </p>
+              <p>
+                My goal is to grow into a reliable developer who not only understands the tech — but uses it to build tools that make a real impact. I'm excited for new opportunities that will challenge me, help me grow, and allow me to quietly make a difference — one project at a time.
+              </p>
+            </IntroText>
+            <SkillsContainer>
+              <SkillsTitle>Technical Skills</SkillsTitle>
+              <SkillsGrid>
+                <SkillCategory>
+                  <h4>Frontend</h4>
+                  <SkillList>
+                    <li>HTML5 / CSS3</li>
+                    <li>JavaScript</li>
+                    <li>React.js</li>
+                    <li>Tailwind CSS</li>
+                  </SkillList>
+                </SkillCategory>
+                <SkillCategory>
+                  <h4>Backend</h4>
+                  <SkillList>
+                    <li>PHP</li>
+                    <li>MySQL</li>
+                    <li>Firebase (Blaze Plan – Auth, Firestore, Storage)</li>
+                  </SkillList>
+                </SkillCategory>
+                <SkillCategory>
+                  <h4>Tools & Others</h4>
+                  <SkillList>
+                    <li>Git / GitHub / GitLab</li>
+                    <li>Flutter (for mobile development)</li>
+                    <li>Docker</li>
+                    <li>Google Cloud Platform (GCS / Firebase Hosting)</li>
+                  </SkillList>
+                </SkillCategory>
+              </SkillsGrid>
+            </SkillsContainer>
+          </IntroContainer>
 
           <InfoGrid>
             {/* Education Section */}
@@ -132,13 +208,11 @@ I’m a dedicated IT graduate with a passion for turning ideas into real-world s
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-100px" }}
             >
               <InfoTitle>
-                <IconWrapper>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
+                <IconWrapper $color="#4e79a7">
+                  <FaGraduationCap />
                 </IconWrapper>
                 Education
               </InfoTitle>
@@ -146,10 +220,10 @@ I’m a dedicated IT graduate with a passion for turning ideas into real-world s
                 <h3>Caraga State University – Cabadbaran Campus</h3>
                 <p>Bachelor of Science in Information Technology</p>
                 <Duration>2021 – 2025</Duration>
+                <AchievementsTitle>Notable Achievements:</AchievementsTitle>
                 <AchievementsList>
                   <li>Deans Lister (1st Year)</li>
                   <li>Presidents Lister (4th Year, 1st Semester)</li>
-                  <li>ICT Student Congress – Certification (Member)</li>
                 </AchievementsList>
               </InfoItem>
             </InfoCard>
@@ -160,31 +234,45 @@ I’m a dedicated IT graduate with a passion for turning ideas into real-world s
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-100px" }}
             >
               <InfoTitle>
-                <IconWrapper>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
+                <IconWrapper $color="#e15759">
+                  <FaLaptopCode />
                 </IconWrapper>
-                Work Experience
+                 Experience
               </InfoTitle>
               <InfoItem>
                 <h3>Web Developer Intern</h3>
                 <Company>Staff Outsourcing Solutions</Company>
                 <Location>7F MDCT Building, Leyte Loop, Cebu Business Park, Cebu City, 6000 Philippines</Location>
-                <Duration>August 2024 - January 2025</Duration>
+                <Duration>August 2024 – January 2025</Duration>
+                <AchievementsTitle>Key Responsibilities:</AchievementsTitle>
                 <AchievementsList>
-                  <li>Developed two complex responsive web and mobile applications</li>
-                  <li>Collaborated with cross-functional teams</li>
-                  <li>Implemented RESTful API integrations</li>
+                  <li>Developed two complex, responsive web and mobile applications in collaboration with fellow intern team members using modern development tools and best practices</li>
+                  <li>Worked closely with designers, developers, and testers to meet functional requirements and project deadlines</li>
+                  <li>Gained hands-on experience in technologies such as React, Flutter, Firebase, Docker, and API integration</li>
+                  <li>Utilized Git for version control to manage codebase changes and coordinate effectively with the team</li>
+                </AchievementsList>
+              </InfoItem>
+              <InfoItem>
+                <h3>Freelance Web Developer</h3>
+                <Duration>2023 – Present</Duration>
+                <AchievementsTitle>Projects:</AchievementsTitle>
+                <AchievementsList>
+                  <li>Developed custom web-based projects for students using PHP, focusing on functionality, usability, and academic requirements</li>
+                  <li>Collaborated with clients to gather project requirements, implement requested features, and deliver responsive, presentable systems on time</li>
+                  <li>Built user interfaces with HTML, CSS, JavaScript, and integrated backend logic using PHP and MySQL</li>
                 </AchievementsList>
               </InfoItem>
               <InfoItem>
                 <h3>Freelance Categorization / Image Annotation</h3>
                 <Company>Remotasks (Online Job)</Company>
                 <Duration>2021-2022</Duration>
+                <AchievementsList>
+                  <li>Performed accurate image annotation and data categorization for machine learning projects</li>
+                  <li>Maintained high quality standards while meeting project deadlines</li>
+                </AchievementsList>
               </InfoItem>
             </InfoCard>
 
@@ -194,13 +282,11 @@ I’m a dedicated IT graduate with a passion for turning ideas into real-world s
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-100px" }}
             >
               <InfoTitle>
-                <IconWrapper>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                <IconWrapper $color="#76b7b2">
+                  <FaCertificate />
                 </IconWrapper>
                 Certifications
               </InfoTitle>
@@ -215,12 +301,12 @@ I’m a dedicated IT graduate with a passion for turning ideas into real-world s
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  View Credential
+                  View Credential <FiExternalLink size={14} />
                 </CertificationLink>
               </InfoItem>
               <InfoItem>
-                <h3>DICT EDP Diagnostic Examination</h3>
-                <Company>CSU – Cabadbaran Campus</Company>
+                <h3>DICT EDP Diagnostic Examination - Programming</h3>
+                <Company>Caraga State University Cabadbaran Campus</Company>
                 <Duration>May 2, 2025</Duration>
                 <p>Qualified for ICT Proficiency Certification Examination</p>
               </InfoItem>
@@ -252,47 +338,74 @@ I’m a dedicated IT graduate with a passion for turning ideas into real-world s
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
-            viewport={{ once: true }}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            viewport={{ once: true, margin: "-100px" }}
+            onMouseEnter={() => setIsAutoPlaying(false)}
+            onMouseLeave={() => setIsAutoPlaying(true)}
           >
-<CarouselTitle>Internship Moments</CarouselTitle>
-<CarouselDescription>
-Snapshots from my internship journey with eComia — showcasing collaboration, presentations, and milestones.
-</CarouselDescription>
+            <SectionTitle
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true, margin: "-100px" }}
+            >
+              Internship Moments
+              <TitleUnderline />
+            </SectionTitle>
+            <CarouselDescription>
+              Snapshots from my internship journey — showcasing collaboration, presentations, and milestones.
+            </CarouselDescription>
             <CarouselContainer>
-              <CarouselButton $direction="left" onClick={prevImage}>
-                <FiChevronLeft />
+              <CarouselButton 
+                $direction="left" 
+                onClick={prevImage}
+                aria-label="Previous image"
+              >
+                <FiChevronLeft size={24} />
               </CarouselButton>
               
-              <CarouselImage>
-                <img 
-                  src={images[currentImageIndex].src} 
-                  alt={images[currentImageIndex].alt}
-                  style={{ objectFit: 'contain' }}
-                />
-                <CarouselCaption>
-                  {images[currentImageIndex].description}
-                  <CarouselIndicators>
-                    {images.map((_, index) => (
-                      <CarouselIndicator 
-                        key={index}
-                        $active={index === currentImageIndex}
-                        onClick={() => {
-                          setCurrentImageIndex(index);
-                          setIsAutoPlaying(false);
-                          setTimeout(() => setIsAutoPlaying(true), 5000);
-                        }}
-                      />
-                    ))}
-                  </CarouselIndicators>
-                </CarouselCaption>
-              </CarouselImage>
+              <AnimatePresence custom={direction} initial={false}>
+                <CarouselImage
+                  key={currentImageIndex}
+                  custom={direction}
+                  variants={variants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{
+                    x: { type: "spring", stiffness: 300, damping: 30 },
+                    opacity: { duration: 0.2 }
+                  }}
+                >
+                  <img 
+                    src={images[currentImageIndex].src} 
+                    alt={images[currentImageIndex].alt}
+                    loading="lazy"
+                  />
+                  <CarouselCaption>
+                    {images[currentImageIndex].description}
+                  </CarouselCaption>
+                </CarouselImage>
+              </AnimatePresence>
               
-              <CarouselButton $direction="right" onClick={nextImage}>
-                <FiChevronRight />
+              <CarouselButton 
+                $direction="right" 
+                onClick={nextImage}
+                aria-label="Next image"
+              >
+                <FiChevronRight size={24} />
               </CarouselButton>
             </CarouselContainer>
+            
+            <CarouselIndicators>
+              {images.map((_, index) => (
+                <CarouselIndicator 
+                  key={index}
+                  $active={index === currentImageIndex}
+                  onClick={() => goToImage(index)}
+                  aria-label={`Go to image ${index + 1}`}
+                />
+              ))}
+            </CarouselIndicators>
           </CarouselSection>
         </AboutContent>
       </SectionContainer>
@@ -300,6 +413,7 @@ Snapshots from my internship journey with eComia — showcasing collaboration, p
   );
 };
 
+// Styled Components
 const AboutSection = styled.section`
   padding: 8rem 0;
   background: ${({ theme }) => theme.colors.backgroundAlt};
@@ -313,8 +427,9 @@ const AboutSection = styled.section`
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at 20% 50%, ${({ theme }) => theme.colors.primary}10, transparent 30%),
-                radial-gradient(circle at 80% 70%, ${({ theme }) => theme.colors.secondary}10, transparent 25%);
+    background: 
+      radial-gradient(circle at 20% 50%, ${({ theme }) => theme.colors.primary}08, transparent 30%),
+      radial-gradient(circle at 80% 70%, ${({ theme }) => theme.colors.secondary}08, transparent 25%);
     z-index: 0;
   }
 
@@ -339,30 +454,19 @@ const SectionTitle = styled(motion.h2)`
   text-align: center;
   margin-bottom: 5rem;
   font-size: clamp(2rem, 5vw, 3rem);
-  position: relative;
   font-weight: 700;
-  display: block;
-  width: 100%;
-  background: linear-gradient(90deg, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.secondary});
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: white;
-
-  &::after {
-    content: '';
-    display: block;
-    width: 80px;
-    height: 4px;
-    background: linear-gradient(90deg, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.secondary});
-    margin: 1.5rem auto 0;
-    border-radius: 2px;
-  }
-
-  @media (max-width: 768px) {
-    margin-bottom: 3rem;
-  }
-            background: ${({ theme }) => theme.colors.background};
   color: ${({ theme }) => theme.colors.text};
+  position: relative;
+  display: inline-block;
+  width: 100%;
+`;
+
+const TitleUnderline = styled.div`
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.secondary});
+  margin: 1.5rem auto 0;
+  border-radius: 2px;
 `;
 
 const AboutContent = styled.div`
@@ -371,29 +475,92 @@ const AboutContent = styled.div`
   gap: 4rem;
 `;
 
-const IntroText = styled(motion.div)`
-  text-align: center;
-  max-width: 800px;
-  margin: 0 auto;
-  font-size: 1.1rem;
-  line-height: 1.8;
-  color: ${({ theme }) => theme.colors.text};
+const IntroContainer = styled(motion.div)`
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  background: ${({ theme }) => theme.colors.background};
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 5px 15px ${({ theme }) => theme.colors.shadow};
+  border: 1px solid ${({ theme }) => theme.colors.border};
 
-  p {
-    margin-bottom: 0;
-    font-size: clamp(1rem, 2vw, 1.1rem);
-    background: ${({ theme }) => theme.colors.background};
-    padding: 2rem;
-    border-radius: 16px;
-    box-shadow: 0 5px 15px ${({ theme }) => theme.colors.shadow};
-    border: 1px solid ${({ theme }) => theme.colors.border};
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
   }
 
   @media (max-width: 768px) {
-    text-align: left;
-    
-    p {
-      padding: 1.5rem;
+    padding: 1.5rem;
+  }
+`;
+
+const IntroText = styled.div`
+  p {
+    margin-bottom: 1.5rem;
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    line-height: 1.8;
+    color: ${({ theme }) => theme.colors.text};
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+`;
+
+const SkillsContainer = styled.div`
+  background: ${({ theme }) => theme.colors.backgroundAlt2};
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+const SkillsTitle = styled.h4`
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: ${({ theme }) => theme.colors.primary};
+  text-align: center;
+`;
+
+const SkillsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+`;
+
+const SkillCategory = styled.div`
+  h4 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: ${({ theme }) => theme.colors.text};
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &::before {
+      content: '•';
+      color: ${({ theme }) => theme.colors.primary};
+    }
+  }
+`;
+
+const SkillList = styled.ul`
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+
+  li {
+    font-size: 0.9rem;
+    color: ${({ theme }) => theme.colors.textSecondary};
+    margin-bottom: 0.4rem;
+    position: relative;
+    padding-left: 1rem;
+
+    &::before {
+      content: '▹';
+      position: absolute;
+      left: 0;
+      color: ${({ theme }) => theme.colors.primary};
     }
   }
 `;
@@ -440,16 +607,20 @@ const InfoCard = styled(motion.div)`
   }
 `;
 
-const IconWrapper = styled.span`
+interface IconWrapperProps {
+  $color?: string;
+}
+
+const IconWrapper = styled.span<IconWrapperProps>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: ${({ theme }) => theme.colors.primary}20;
+  background: ${({ $color, theme }) => $color ? `${$color}20` : `${theme.colors.primary}20`};
   border-radius: 12px;
   margin-right: 12px;
-  color: ${({ theme }) => theme.colors.primary};
+  color: ${({ $color, theme }) => $color || theme.colors.primary};
   backdrop-filter: blur(5px);
 
   svg {
@@ -529,8 +700,14 @@ const Duration = styled.p`
   }
 `;
 
+const AchievementsTitle = styled.p`
+  font-weight: 500 !important;
+  color: ${({ theme }) => theme.colors.text} !important;
+  margin-top: 0.8rem !important;
+`;
+
 const AchievementsList = styled.ul`
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   padding-left: 0;
   list-style-type: none;
 
@@ -543,7 +720,7 @@ const AchievementsList = styled.ul`
     line-height: 1.5;
 
     &::before {
-      content: '✓';
+      content: '▹';
       position: absolute;
       left: 0;
       color: ${({ theme }) => theme.colors.primary};
@@ -573,12 +750,11 @@ const CertificationLink = styled(motion.a)`
     box-shadow: 0 5px 15px ${({ theme }) => theme.colors.primary}30;
   }
 
-  &::after {
-    content: '→';
+  svg {
     transition: transform 0.2s ease;
   }
 
-  &:hover::after {
+  &:hover svg {
     transform: translateX(3px);
   }
 `;
@@ -588,25 +764,13 @@ const CarouselSection = styled(motion.div)`
   width: 100%;
 `;
 
-const CarouselTitle = styled.h3`
+const CarouselDescription = styled.p`
   text-align: center;
-  font-size: 1.8rem;
-  margin-bottom: 2rem;
-  color: ${({ theme }) => theme.colors.primary};
-  position: relative;
-  display: inline-block;
-  left: 50%;
-  transform: translateX(-50%);
-
-  &::after {
-    content: '';
-    display: block;
-    width: 60px;
-    height: 3px;
-    background: ${({ theme }) => theme.colors.primary};
-    margin: 0.8rem auto 0;
-    border-radius: 2px;
-  }
+  max-width: 700px;
+  margin: 0 auto 3rem;
+  font-size: 1rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  line-height: 1.6;
 `;
 
 const CarouselContainer = styled.div`
@@ -616,6 +780,15 @@ const CarouselContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 500px;
+
+  @media (max-width: 768px) {
+    height: 350px;
+  }
+
+  @media (max-width: 480px) {
+    height: 250px;
+  }
 `;
 
 interface CarouselButtonProps {
@@ -629,8 +802,8 @@ const CarouselButton = styled.button<CarouselButtonProps>`
   background: ${({ theme }) => theme.colors.background};
   border: none;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -639,23 +812,29 @@ const CarouselButton = styled.button<CarouselButtonProps>`
   z-index: 10;
   color: ${({ theme }) => theme.colors.primary};
   transition: all 0.3s ease;
+  opacity: 0.8;
 
   &:hover {
     background: ${({ theme }) => theme.colors.primary};
     color: white;
     transform: translateY(-50%) scale(1.1);
+    opacity: 1;
   }
-            background: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.text};
 
-  ${({ $direction }) => $direction === 'left' ? 'left: 10px;' : 'right: 10px;'}
+  ${({ $direction }) => $direction === 'left' ? 'left: -25px;' : 'right: -25px;'}
+
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
+    ${({ $direction }) => $direction === 'left' ? 'left: -15px;' : 'right: -15px;'}
+  }
 `;
 
-const CarouselImage = styled.div`
-  position: relative;
+const CarouselImage = styled(motion.div)`
+  position: absolute;
   width: 100%;
-  max-width: 700px;
-  height: 400px;
+  max-width: 800px;
+  height: 100%;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -665,18 +844,9 @@ const CarouselImage = styled.div`
   justify-content: center;
 
   img {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-  }
-
-  @media (max-width: 768px) {
-    height: 300px;
-  }
-
-  @media (max-width: 480px) {
-    height: 250px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 `;
 
@@ -687,43 +857,37 @@ const CarouselCaption = styled.div`
   right: 0;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
   color: white;
-  padding: 0.1rem;
+  padding: 1.5rem 1rem 0.5rem;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 `;
 
 const CarouselIndicators = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
-  gap: 0.5rem;
+  margin-top: 1.5rem;
+  gap: 0.8rem;
 `;
 
 interface CarouselIndicatorProps {
   $active: boolean;
 }
 
-const CarouselIndicator = styled.div<CarouselIndicatorProps>`
-  width: 10px;
-  height: 10px;
+const CarouselIndicator = styled.button<CarouselIndicatorProps>`
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   background: ${({ $active, theme }) => 
-    $active ? theme.colors.primary : 'rgba(255, 255, 255, 0.5)'};
+    $active ? theme.colors.primary : 'rgba(0, 0, 0, 0.2)'};
   cursor: pointer;
   transition: all 0.3s ease;
+  border: none;
+  padding: 0;
 
   &:hover {
     transform: scale(1.2);
+    background: ${({ theme }) => theme.colors.primary};
   }
 `;
-const CarouselDescription = styled.p`
-  text-align: center;
-  max-width: 700px;
-  margin: 0 auto 4rem;
-  font-size: 1rem;
-  color: ${({ theme }) => theme.colors.textSecondary};
-  line-height: 1;
-`;
-
 
 export default About;

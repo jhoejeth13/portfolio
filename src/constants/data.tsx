@@ -1,6 +1,6 @@
 // constants/data.tsx
-import { FaPhp, FaPython, FaJava, FaHtml5, FaCss3Alt, FaReact, FaGitAlt, FaGithub, FaGitlab } from 'react-icons/fa';
-import { SiDart, SiCplusplus, SiBootstrap, SiJavascript, SiFlutter, SiLaravel, SiMysql, SiFirebase, SiGooglecloud } from 'react-icons/si';
+import { FaPhp, FaPython, FaJava, FaHtml5, FaCss3Alt, FaReact, FaGitAlt } from 'react-icons/fa';
+import { SiDart, SiCplusplus, SiBootstrap, SiJavascript, SiFlutter, SiLaravel, SiMysql, SiFirebase, SiGooglecloud, SiGithub, SiGitlab } from 'react-icons/si';
 import { DiGoogleCloudPlatform } from 'react-icons/di';
 import { ReactElement } from 'react';
 
@@ -21,11 +21,6 @@ export const skills: Skill[] = [
   {
     name: 'Python',
     icon: <FaPython size={40} color="#3776AB" />,
-    category: 'Programming Languages'
-  },
-  {
-    name: 'Dart',
-    icon: <SiDart size={40} color="#0175C2" />,
     category: 'Programming Languages'
   },
   {
@@ -91,19 +86,19 @@ export const skills: Skill[] = [
   // Version Control
   {
     name: 'GitHub',
-    icon: <FaGithub size={40} color="#181717" />,
+    icon: <SiGithub size={40} color="var(--text-color)" />, // Will adapt to light/dark mode
     category: 'Version Control'
   },
   {
     name: 'GitLab',
-    icon: <FaGitlab size={40} color="#FCA121" />,
+    icon: <SiGitlab size={40} color="#FCA121" />,
     category: 'Version Control'
   },
 
   // Cloud & Tools
   {
     name: 'Google Cloud Platform (GCP)',
-    icon: <DiGoogleCloudPlatform size={40} color="#4285F4" />,
+    icon: <SiGooglecloud size={40} color="#4285F4" />,
     category: 'Cloud & Tools'
   },
   {
@@ -113,7 +108,7 @@ export const skills: Skill[] = [
   },
   {
     name: 'Google Cloud Storage',
-    icon: <DiGoogleCloudPlatform size={40} color="#34A853" />,
+    icon: <SiGooglecloud size={40} color="#34A853" />,
     category: 'Cloud & Tools'
   },
   {

@@ -4,8 +4,7 @@ import { skills } from '../constants/data';
 import React from 'react';
 
 const SkillsSection = styled.section`
-  padding: 5rem 0;
-  min-height: 100vh;
+  padding: 8rem 0;
   background: ${({ theme }) => theme.colors.backgroundAlt};
   transition: background 0.3s ease;
 `;
@@ -14,64 +13,66 @@ const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
 
   @media (max-width: 768px) {
     padding: 0 1.5rem;
+    gap: 3rem;
   }
 `;
 
 const Title = styled.h2`
   text-align: center;
-  font-size: clamp(2rem, 5vw, 2.5rem);
-  margin-bottom: 3rem;
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 1rem;
   color: ${({ theme }) => theme.colors.text};
-  font-weight: 600;
-  position: relative;
+  font-weight: 500;
+  letter-spacing: -0.05em;
+`;
 
-  &::after {
-    content: '';
-    display: block;
-    width: 80px;
-    height: 4px;
-    background: linear-gradient(
-      90deg,
-      ${({ theme }) => theme.colors.primary},
-      ${({ theme }) => theme.colors.secondary}
-    );
-    margin: 0.5rem auto 0;
-    border-radius: 2px;
-  }
+const Subtitle = styled.p`
+  text-align: center;
+  font-size: 1.1rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  line-height: 1.6;
 `;
 
 const CategoryContainer = styled.div`
-  margin-bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
 
-  &:last-child {
-    margin-bottom: 0;
-  }
+const CategoryHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
 `;
 
 const CategoryTitle = styled.h3`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: clamp(1.25rem, 3vw, 1.5rem);
-  margin-bottom: 1.5rem;
-  color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: 1.25rem;
+  color: ${({ theme }) => theme.colors.text};
   font-weight: 500;
 `;
 
-const CategoryIcon = styled.span`
-  font-size: 1.8rem;
+const Divider = styled.div`
+  flex-grow: 1;
+  height: 1px;
+  background: ${({ theme }) => theme.colors.border};
 `;
 
 const SkillsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.25rem;
 
   @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 1rem;
   }
 
@@ -81,84 +82,72 @@ const SkillsGrid = styled.div`
 `;
 
 const SkillCard = styled.div<{ $isHovered: boolean }>`
-  padding: 1.5rem;
-  border-radius: 12px;
+  padding: 1.75rem 1rem;
+  border-radius: 8px;
   background: ${({ theme }) => theme.colors.background};
-  box-shadow: ${({ theme }) => theme.colors.shadow};
   text-align: center;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 0.3s ease;
   border: 1px solid ${({ theme }) => theme.colors.border};
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  height: 100%;
 
   ${({ $isHovered, theme }) =>
     $isHovered &&
     css`
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-      border-color: ${theme.colors.primary}80;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border-color: ${theme.colors.primary}50;
     `}
-
-  @media (max-width: 768px) {
-    padding: 1.25rem;
-  }
 `;
 
 const SkillIcon = styled.div`
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 60px;
-  font-size: 2.5rem;
-  background: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.text};
+  height: 48px;
+  width: 48px;
+  font-size: 2rem;
+  color: ${({ theme }) => theme.colors.primary};
 
   svg {
     width: 100%;
     height: 100%;
-    max-width: 50px;
-    max-height: 50px;
-    color: ${({ theme }) => theme.colors.primary};
+    max-width: 40px;
+    max-height: 40px;
+    color: inherit;
 
-    /* GitHub icon specific styling */
     &[data-icon="github"] {
       path {
         fill: ${({ theme }) => theme.title === 'dark' ? theme.colors.text : '#181717'};
       }
     }
 
-    /* GitLab icon specific styling */
     &[data-icon="gitlab"] {
       path {
         fill: ${({ theme }) => theme.title === 'dark' ? '#FC6D26' : '#F05032'};
       }
     }
 
-    /* General dark mode adjustments for SVG icons */
     path {
       fill: currentColor;
     }
   }
 `;
 
-const SkillName = styled.h3`
+const SkillName = styled.h4`
   margin-bottom: 0.5rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: ${({ theme }) => theme.colors.text};
-  font-weight: 600;
-
-  @media (max-width: 768px) {
-    font-size: 1rem;
-  }
+  font-weight: 500;
 `;
 
 const SkillDescription = styled.p`
-  color: ${({ theme }) => theme.colors.textSecondary};
-  font-size: 0.9rem;
+  color: ${({ theme }) => theme.colors.textTertiary};
+  font-size: 0.85rem;
   line-height: 1.5;
   margin: 0;
 `;
@@ -173,25 +162,31 @@ interface Skill {
 export default function Skills() {
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
 
-  const categoryIcons: Record<string, string> = {
-    'Programming Languages': '🧠',
-    'Frontend Development': '🎨',
-    'Backend Development': '🛠️',
-    'Version Control': '🔧',
-    'Cloud & Tools': '☁️'
-  };
+  const categories = [
+    'Programming Languages',
+    'Frontend Development',
+    'Backend Development',
+    'Version Control',
+    'Cloud & Tools'
+  ];
 
   return (
     <SkillsSection id="skills">
       <Container>
-        <Title>My Skills</Title>
+        <div>
+          <Title>Skills & Expertise</Title>
+          <Subtitle>
+            Technologies and tools I've worked with, organized by category.
+          </Subtitle>
+        </div>
         
-        {Object.entries(categoryIcons).map(([category, icon]) => (
+        {categories.map((category) => (
           <CategoryContainer key={category}>
-            <CategoryTitle>
-              <CategoryIcon>{icon}</CategoryIcon>
-              {category}
-            </CategoryTitle>
+            <CategoryHeader>
+              <Divider />
+              <CategoryTitle>{category}</CategoryTitle>
+              <Divider />
+            </CategoryHeader>
             
             <SkillsGrid>
               {skills
