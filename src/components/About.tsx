@@ -157,17 +157,18 @@ const About = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true, margin: "-100px" }}
           >
-            <IntroText>
-              <p>
-                I'm a quiet but driven IT graduate who enjoys turning ideas into simple, meaningful tech solutions. During my academic journey and internship experience, I've worked on web and mobile development projects, explored cloud tools, and used APIs to build practical systems — all while learning a lot along the way.
-              </p>
-              <p>
-                I may not be the loudest in the room, but I'm someone who listens closely, thinks deeply, and shows up with consistency. I take pride in improving through patience, problem-solving, and staying committed to what I start. I care about doing things right — not just in code, but in the way I work with others and approach every project.
-              </p>
-              <p>
-                My goal is to grow into a reliable developer who not only understands the tech — but uses it to build tools that make a real impact. I'm excited for new opportunities that will challenge me, help me grow, and allow me to quietly make a difference — one project at a time.
-              </p>
-            </IntroText>
+<IntroText>
+  <p>
+    I'm a quiet but driven IT graduate who enjoys turning ideas into simple, meaningful tech solutions. I’ve worked on both web and mobile development projects, explored cloud tools, and integrated APIs — not just to finish tasks, but to understand how things truly work. Every project I’ve worked on has been part of a learning journey.
+  </p>
+  <p>
+    I may not be the loudest in the room, but I show up with focus, consistency, and a deep willingness to learn. I think carefully before I build, and I take pride in improving over time — through patience, problem-solving, and working with people respectfully and honestly. I believe good code isn't just about syntax; it's about intention.
+  </p>
+  <p>
+    I’m still learning — and that’s something I’ve learned to embrace. My goal is to grow into a reliable developer who creates practical, human-centered tools that actually make a difference. I’m always open to new challenges, and I hope to keep improving — quietly, steadily, one project at a time.
+  </p>
+</IntroText>
+
             <SkillsContainer>
               <SkillsTitle>Technical Skills</SkillsTitle>
               <SkillsGrid>
