@@ -162,12 +162,13 @@ const About = () => {
     I'm a quiet but driven IT graduate who enjoys turning ideas into simple, meaningful tech solutions. I’ve worked on both web and mobile development projects, explored cloud tools, and integrated APIs — not just to finish tasks, but to understand how things truly work. Every project I’ve worked on has been part of a learning journey.
   </p>
   <p>
-    I may not be the loudest in the room, but I show up with focus, consistency, and a deep willingness to learn. I think carefully before I build, and I take pride in improving over time — through patience, problem-solving, and working with people respectfully and honestly. I believe good code isn't just about syntax; it's about intention.
+    As a woman in tech, I take pride in showing up with focus, consistency, and a results-driven mindset. I may not be the loudest in the room, but I think carefully before I build, and I stay committed to learning and improving through patience, problem-solving, and respectful collaboration. I believe good code isn't just about syntax; it's about intention.
   </p>
   <p>
     I’m still learning — and that’s something I’ve learned to embrace. My goal is to grow into a reliable developer who creates practical, human-centered tools that actually make a difference. I’m always open to new challenges, and I hope to keep improving — quietly, steadily, one project at a time.
   </p>
 </IntroText>
+
 
             <SkillsContainer>
               <SkillsTitle>Technical Skills</SkillsTitle>
