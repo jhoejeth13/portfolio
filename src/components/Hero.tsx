@@ -28,7 +28,7 @@ Passionate about building <Highlight>practical</Highlight>, <Highlight>efficient
               >
                 View My Work
               </CTAButton>
-              { <DownloadButton 
+              {/* { <DownloadButton 
                 href="/CV/Mondejar, Jhoejeth L. - final.pdf"  
                 download="Jhoejeth Mondejar - CV.pdf"
                 whileHover={{ scale: 1.05 }}
@@ -36,7 +36,7 @@ Passionate about building <Highlight>practical</Highlight>, <Highlight>efficient
               >
                 <FiDownload style={{ marginRight: '8px' }} />
                 Download CV
-              </DownloadButton> }
+              </DownloadButton> } */}
             </ButtonGroup>
 
             <SocialLinks>
