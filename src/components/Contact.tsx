@@ -3,8 +3,9 @@ import { useForm } from 'react-hook-form';
 import styled, { css } from 'styled-components';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import Modal from 'react-modal';
+import emailjs from '@emailjs/browser';
 
-// Make sure to bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
+// Make sure to bind modal to your appElement
 if (typeof window !== 'undefined') {
   Modal.setAppElement('#root');
 }
@@ -14,7 +15,6 @@ type FormData = {
   email: string;
   message: string;
 };
-
 const Contact = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,30 +25,36 @@ const Contact = () => {
     formState: { errors },
   } = useForm<FormData>();
 
-  const onSubmit = async (data: FormData) => {
-    setIsSubmitting(true);
-    try {
-      const response = await fetch('https://formspree.io/f/xzzgkkvp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+const onSubmit = async (data: FormData) => {
+  setIsSubmitting(true);
+  try {
+    const templateParams = {
+      // These variables should match your template placeholders
+      from_name: data.name,       // Sender's name
+      from_email: data.email,     // Sender's email
+      message: data.message,      // The message content
+      
+      // Additional default fields
+      to_name: "Your Name",       // Your name (recipient)
+      reply_to: data.email        // Sets reply-to address
+    };
 
-      if (response.ok) {
-        setModalIsOpen(true);
-        reset();
-      } else {
-        throw new Error('Form submission failed');
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      alert('There was an error submitting your form. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    await emailjs.send(
+      'service_rxxmql6',
+      'template_s8faqn4',
+      templateParams,
+      'xHeyX4r6Ev7Erx4BK'
+    );
+    
+    setModalIsOpen(true);
+    reset();
+  } catch (error) {
+    console.error('Error submitting form:', error);
+    alert('There was an error submitting your form. Please try again.');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   const closeModal = () => {
     setModalIsOpen(false);
@@ -70,7 +76,7 @@ const Contact = () => {
               <ContactDetails>
                 <ContactItem>
                   <ContactIcon>📩</ContactIcon>
-                  <HighlightedEmail href="mailto:dodeymondejar@gmail.com">
+                  <HighlightedEmail>
                     dodeymondejar@gmail.com
                   </HighlightedEmail>
                 </ContactItem>
@@ -357,6 +363,7 @@ const HighlightedEmail = styled.a`
   text-decoration: none;
   transition: all 0.3s ease;
   position: relative;
+
 
   &:hover {
     color: ${({ theme }) => theme.colors.secondary};

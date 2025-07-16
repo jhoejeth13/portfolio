@@ -246,7 +246,7 @@ const About = () => {
               </InfoTitle>
               <InfoItem>
                 <h3>Web Developer Intern</h3>
-                <Company>Staff Outsourcing Solutions</Company>
+                <Company>Staff Outsourcing Solutions (eComia)</Company>
                 <Location>7F MDCT Building, Leyte Loop, Cebu Business Park, Cebu City, 6000 Philippines</Location>
                 <Duration>August 2024 – January 2025</Duration>
                 <AchievementsTitle>Key Responsibilities:</AchievementsTitle>
@@ -354,7 +354,7 @@ const About = () => {
               <TitleUnderline />
             </SectionTitle>
             <CarouselDescription>
-              Snapshots from my internship journey — showcasing collaboration, presentations, and milestones.
+              Moments from my internship journey at eComia — a glimpse into teamwork, presentations, and milestones.
             </CarouselDescription>
             <CarouselContainer>
               <CarouselButton 
