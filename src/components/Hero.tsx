@@ -1,8 +1,39 @@
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { FiGithub, FiLinkedin, FiDownload } from 'react-icons/fi';
+import { useEffect, useState } from 'react';
 
 const Hero = () => {
+  const [text, setText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [loopNum, setLoopNum] = useState(0);
+  const [typingSpeed, setTypingSpeed] = useState(150);
+
+  const fullText = ['Aspiring Web Developer — Still learning, already building.'];
+
+  useEffect(() => {
+    const handleTyping = () => {
+      const i = loopNum % fullText.length;
+      const currentText = fullText[i];
+      
+      setText(isDeleting 
+        ? currentText.substring(0, text.length - 1) 
+        : currentText.substring(0, text.length + 1));
+      
+      setTypingSpeed(isDeleting ? 30 : 150);
+
+      if (!isDeleting && text === currentText) {
+        setTimeout(() => setIsDeleting(true), 1000);
+      } else if (isDeleting && text === '') {
+        setIsDeleting(false);
+        setLoopNum(loopNum + 1);
+      }
+    };
+
+    const timer = setTimeout(handleTyping, typingSpeed);
+    return () => clearTimeout(timer);
+  }, [text, isDeleting, loopNum, fullText, typingSpeed]);
+
   return (
     <HeroSection id="home">
       <HeroGrid>
@@ -14,11 +45,17 @@ const Hero = () => {
           >
             <Subtitle>Hi, I'm</Subtitle>
             <Title>Jhoejeth Layos Mondejar</Title>
-            <Role>Web Developer in Progress</Role>
-<Description>
-<p>
-Passionate about building <Highlight>practical</Highlight>, <Highlight>efficient</Highlight> systems that solve real problems and make a meaningful impact through technology — while continuously learning and growing as a <Highlight>developer</Highlight>.</p>
-</Description>
+            <Role>
+              <TypewriterText>
+                {text}
+                <Cursor>|</Cursor>
+              </TypewriterText>
+            </Role>
+            <Description>
+              <p>
+                Passionate about building <Highlight>practical</Highlight>, <Highlight>efficient</Highlight> systems that solve real problems and make a meaningful impact through technology — while continuously learning and growing as a <Highlight>developer</Highlight>.
+              </p>
+            </Description>
 
             <ButtonGroup>
               <CTAButton 
@@ -79,6 +116,24 @@ Passionate about building <Highlight>practical</Highlight>, <Highlight>efficient
   );
 };
 
+// Add these new styled components
+const TypewriterText = styled.span`
+  display: inline-block;
+    font-family: monospace;
+`;
+
+const Cursor = styled.span`
+  display: inline-block;
+  margin-left: 2px;
+  animation: blink 1s infinite;
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+`;
+
+// Rest of your styled components remain the same...
 const HeroSection = styled.section`
   min-height: 100vh;
   display: flex;
@@ -160,6 +215,7 @@ const Role = styled.p`
   font-weight: 500;
   position: relative;
   display: inline-block;
+  min-height: 1.5em;
   
   &::after {
     content: '';

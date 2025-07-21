@@ -1,12 +1,13 @@
-import { useState } from 'react';
-import styled, { css } from 'styled-components';
+// components/Skills.tsx
+import { useState, useRef } from 'react';
+import styled, { css, keyframes } from 'styled-components';
 import { skills } from '../constants/data';
-import React from 'react';
 
 const SkillsSection = styled.section`
   padding: 8rem 0;
   background: ${({ theme }) => theme.colors.backgroundAlt};
   transition: background 0.3s ease;
+  overflow: hidden;
 `;
 
 const Container = styled.div`
@@ -41,48 +42,41 @@ const Subtitle = styled.p`
   line-height: 1.6;
 `;
 
-const CategoryContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+const scroll = keyframes`
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+`;
+
+const MarqueeContainer = styled.div`
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+`;
+
+const MarqueeTrack = styled.div`
+  display: inline-block;
+  white-space: nowrap;
+  animation: ${scroll} 30s linear infinite;
+  will-change: transform;
+
+  &:hover {
+    animation-play-state: paused;
+  }
+`;
+
+const SkillsRow = styled.div`
+  display: inline-flex;
   gap: 1.5rem;
-`;
-
-const CategoryHeader = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
-`;
-
-const CategoryTitle = styled.h3`
-  font-size: 1.25rem;
-  color: ${({ theme }) => theme.colors.text};
-  font-weight: 500;
-`;
-
-const Divider = styled.div`
-  flex-grow: 1;
-  height: 1px;
-  background: ${({ theme }) => theme.colors.border};
-`;
-
-const SkillsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 1.25rem;
-
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 1rem;
-  }
-
-  @media (max-width: 480px) {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
+  padding: 1rem 0;
 `;
 
 const SkillCard = styled.div<{ $isHovered: boolean }>`
-  padding: 1.75rem 1rem;
+  padding: 1.5rem;
   border-radius: 8px;
   background: ${({ theme }) => theme.colors.background};
   text-align: center;
@@ -92,129 +86,81 @@ const SkillCard = styled.div<{ $isHovered: boolean }>`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  min-width: 140px;
+  white-space: normal;
 
   ${({ $isHovered, theme }) =>
     $isHovered &&
     css`
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      border-color: ${theme.colors.primary}50;
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      border-color: ${theme.colors.primary};
     `}
 `;
 
 const SkillIcon = styled.div`
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 48px;
   width: 48px;
-  font-size: 2rem;
-  color: ${({ theme }) => theme.colors.primary};
-
-  svg {
-    width: 100%;
-    height: 100%;
-    max-width: 40px;
-    max-height: 40px;
-    color: inherit;
-
-    &[data-icon="github"] {
-      path {
-        fill: ${({ theme }) => theme.title === 'dark' ? theme.colors.text : '#181717'};
-      }
-    }
-
-    &[data-icon="gitlab"] {
-      path {
-        fill: ${({ theme }) => theme.title === 'dark' ? '#FC6D26' : '#F05032'};
-      }
-    }
-
-    path {
-      fill: currentColor;
-    }
-  }
+  font-size: 2.5rem;
 `;
 
 const SkillName = styled.h4`
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
   color: ${({ theme }) => theme.colors.text};
   font-weight: 500;
 `;
 
 const SkillDescription = styled.p`
   color: ${({ theme }) => theme.colors.textTertiary};
-  font-size: 0.85rem;
-  line-height: 1.5;
+  font-size: 0.8rem;
+  line-height: 1.4;
   margin: 0;
 `;
 
-interface Skill {
-  name: string;
-  category: string;
-  description?: string;
-  icon: React.ReactNode | string;
-}
-
 export default function Skills() {
   const [hoveredSkill, setHoveredSkill] = useState<string | null>(null);
+  const marqueeRef = useRef<HTMLDivElement>(null);
 
-  const categories = [
-    'Programming Languages',
-    'Frontend Development',
-    'Backend Development',
-    'Version Control',
-    'Cloud & Tools'
-  ];
+  // Duplicate the skills for seamless looping
+  const duplicatedSkills = [...skills, ...skills];
 
   return (
     <SkillsSection id="skills">
       <Container>
         <div>
-          <Title>Skills & Expertise</Title>
+<Title>Tech Stack & Expertise</Title>
+
           <Subtitle>
-            Technologies and tools I've worked with, organized by category.
-          </Subtitle>
+The tech stack I’m experienced with and continue to work on.          </Subtitle>
         </div>
-        
-        {categories.map((category) => (
-          <CategoryContainer key={category}>
-            <CategoryHeader>
-              <Divider />
-              <CategoryTitle>{category}</CategoryTitle>
-              <Divider />
-            </CategoryHeader>
-            
-            <SkillsGrid>
-              {skills
-                .filter((skill: Skill) => skill.category === category)
-                .map((skill: Skill) => (
-                  <SkillCard
-                    key={skill.name}
-                    $isHovered={hoveredSkill === skill.name}
-                    onMouseEnter={() => setHoveredSkill(skill.name)}
-                    onMouseLeave={() => setHoveredSkill(null)}
-                  >
-                    <SkillIcon>
-                      {typeof skill.icon === 'object' ? 
-                        React.cloneElement(skill.icon as React.ReactElement, { 
-                          ...(skill.name.toLowerCase().includes('github') && { 'data-icon': 'github' }),
-                          ...(skill.name.toLowerCase().includes('gitlab') && { 'data-icon': 'gitlab' })
-                        }) : 
-                        skill.icon}
-                    </SkillIcon>
-                    <SkillName>{skill.name}</SkillName>
-                    {skill.description && (
-                      <SkillDescription>{skill.description}</SkillDescription>
-                    )}
-                  </SkillCard>
-                ))}
-            </SkillsGrid>
-          </CategoryContainer>
-        ))}
+
+        <MarqueeContainer>
+          <MarqueeTrack ref={marqueeRef}>
+            <SkillsRow>
+              {duplicatedSkills.map((skill, index) => (
+                <SkillCard
+                  key={`${skill.name}-${index}`}
+                  $isHovered={hoveredSkill === `${skill.name}-${index}`}
+                  onMouseEnter={() => setHoveredSkill(`${skill.name}-${index}`)}
+                  onMouseLeave={() => setHoveredSkill(null)}
+                >
+                  <SkillIcon>
+                    {skill.icon}
+                  </SkillIcon>
+                  <SkillName>{skill.name}</SkillName>
+                  {skill.description && (
+                    <SkillDescription>{skill.description}</SkillDescription>
+                  )}
+                </SkillCard>
+              ))}
+            </SkillsRow>
+          </MarqueeTrack>
+        </MarqueeContainer>
       </Container>
     </SkillsSection>
   );

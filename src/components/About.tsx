@@ -23,17 +23,17 @@ const About = () => {
     {
       src: "/intern/7.jpg",
       alt: "Team presentation",
-      description: "Presenting our project to the CEO"
+      description: "Presenting our final project to the CEO — nerve-wracking but fulfilling"
     },
     {
       src: "/intern/3.jpg",
       alt: "Team presentation",
-      description: "Presenting our project to the CEO"
+      description: "Presenting our final project to the CEO — nerve-wracking but fulfilling"
     },
     {
       src: "/intern/4.jpg",
       alt: "Project demo",
-      description: "Presenting our project to the CEO"
+      description: "Presenting our final project to the CEO — nerve-wracking but fulfilling"
     },
     {
       src: "/intern/6.jpg",
