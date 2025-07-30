@@ -4,6 +4,7 @@ import 'styled-components';
 declare module 'styled-components' {
   export interface DefaultTheme {
     colors: {
+      borderLight: Interpolation<FastOmit<Omit<HTMLMotionProps<"div">, "ref"> & RefAttributes<HTMLDivElement>, never>>;
       textTertiary: Interpolation<FastOmit<DetailedHTMLProps<HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>, never>>;
       textPrimary: Interpolation<FastOmit<Omit<HTMLMotionProps<"h1">, "ref"> & RefAttributes<HTMLHeadingElement>, never>>;
       backgroundLight: Interpolation<FastOmit<Omit<HTMLMotionProps<"a">, "ref"> & RefAttributes<HTMLAnchorElement>, never>>;

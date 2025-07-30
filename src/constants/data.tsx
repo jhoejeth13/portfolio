@@ -133,7 +133,7 @@ export const skills: Skill[] = [
   },
   {
     name: 'Bash/Shell',
-    icon: <DiTerminal size={40} color="#4EAA25" />,
+    icon: <DiTerminal size={40} color="black" />,
     category: 'Backend Development',
     description: 'Command language for deployment'
   },

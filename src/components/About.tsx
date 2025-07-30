@@ -1,98 +1,114 @@
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useCallback } from 'react';
-import { FiChevronLeft, FiChevronRight, FiExternalLink } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight, FiExternalLink, FiZoomIn } from 'react-icons/fi';
 import { FaGraduationCap, FaCertificate, FaLaptopCode } from 'react-icons/fa';
 
 const About = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [direction, setDirection] = useState(1); // 1 for forward, -1 for backward
+  const [direction, setDirection] = useState(1);
+  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const [filter, setFilter] = useState<'all' | 'events' | 'presentations'|'certifications'>('all');
 
   const images = [
     {
       src: "/intern/2.jpg",
       alt: "Internship moment",
-      description: "SOS 10th Year Anniversary and 2024 Year-End Glitz & Glam Party"
+      description: "SOS 10th Year Anniversary and 2024 Year-End Glitz & Glam Party",
+      category: 'events'
     },
     {
       src: "/intern/11.jpg",
       alt: "Internship moment",
-      description: "SOS 10th Year Anniversary and 2024 Year-End Glitz & Glam Party"
+      description: "SOS 10th Year Anniversary and 2024 Year-End Glitz & Glam Party",
+      category: 'events'
     },
     {
       src: "/intern/7.jpg",
       alt: "Team presentation",
-      description: "Presenting our final project to the CEO — nerve-wracking but fulfilling"
+      description: "Presenting our final project to the CEO — nerve-wracking but fulfilling",
+      category: 'presentations'
     },
     {
       src: "/intern/3.jpg",
       alt: "Team presentation",
-      description: "Presenting our final project to the CEO — nerve-wracking but fulfilling"
+      description: "Presenting our final project to the CEO — nerve-wracking but fulfilling",
+      category: 'presentations'
     },
     {
       src: "/intern/4.jpg",
       alt: "Project demo",
-      description: "Presenting our final project to the CEO — nerve-wracking but fulfilling"
+      description: "Presenting our final project to the CEO — nerve-wracking but fulfilling",
+      category: 'presentations'
     },
     {
       src: "/intern/6.jpg",
       alt: "Team photo",
-      description: "Project demo presentation with the team"    
+      description: "Project demo presentation with the team",
+      category: 'presentations'
     },
     {
       src: "/intern/7.jpeg",
       alt: "Team photo",
-      description: "Project demo presentation with the team"    
+      description: "Project demo presentation with the team",
+      category: 'presentations'
     },
     {
       src: "/intern/12.jpg",
       alt: "Certificate awarding",
-      description: "Receiving certificate of completion"
+      description: "Receiving certificate of completion",
+      category: 'certifications'
     },
     {
       src: "/intern/1.jpg",
       alt: "Certificate awarding",
-      description: "Receiving certificate of completion"
+      description: "Receiving certificate of completion",
+      category: 'certifications'
     },
     {
       src: "/intern/8.jpg",
       alt: "Certificate awarding",
-      description: "Receiving certificate of completion"
+      description: "Receiving certificate of completion",
+      category: 'certifications'
     },
     {
       src: "/intern/5.jpg",
       alt: "Team photo",
-      description: "Group photo with the internship team and Supervisor"
+      description: "Group photo with the internship team and Supervisor",
+      category: 'certifications'
     }
   ];
+
+  const filteredImages = filter === 'all' 
+    ? images 
+    : images.filter(img => img.category === filter);
 
   const nextImage = useCallback(() => {
     setDirection(1);
     setCurrentImageIndex(prevIndex => 
-      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      prevIndex === filteredImages.length - 1 ? 0 : prevIndex + 1
     );
     setIsAutoPlaying(false);
     setTimeout(() => setIsAutoPlaying(true), 10000);
-  }, [images.length]);
+  }, [filteredImages.length]);
 
   const prevImage = useCallback(() => {
     setDirection(-1);
     setCurrentImageIndex(prevIndex => 
-      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+      prevIndex === 0 ? filteredImages.length - 1 : prevIndex - 1
     );
     setIsAutoPlaying(false);
     setTimeout(() => setIsAutoPlaying(true), 10000);
-  }, []);
+  }, [filteredImages.length]);
 
-  // Autoplay effect with pause on hover
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
     
     if (isAutoPlaying) {
       intervalId = setInterval(() => {
         nextImage();
-      }, 5000); // Change image every 5 seconds
+      }, 5000);
     }
 
     return () => {
@@ -112,8 +128,10 @@ const About = () => {
       nextImage();
     } else if (e.key === 'ArrowLeft') {
       prevImage();
+    } else if (e.key === 'Escape' && selectedImage !== null) {
+      setSelectedImage(null);
     }
-  }, [nextImage, prevImage]);
+  }, [nextImage, prevImage, selectedImage]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
@@ -137,6 +155,12 @@ const About = () => {
     })
   };
 
+  const modalVariants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: { opacity: 1, scale: 1 },
+    exit: { opacity: 0, scale: 0.9 }
+  };
+
   return (
     <AboutSection id="about">
       <SectionContainer>
@@ -157,50 +181,46 @@ const About = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true, margin: "-100px" }}
           >
-<IntroText>
-  <p>
-    I'm a quiet but driven IT graduate who enjoys turning ideas into simple, meaningful tech solutions. I’ve worked on both web and mobile development projects, explored cloud tools, and integrated APIs — not just to finish tasks, but to understand how things truly work. Every project I’ve worked on has been part of a learning journey.
-  </p>
-  <p>
-    As a woman in tech, I take pride in showing up with focus, consistency, and a results-driven mindset. I may not be the loudest in the room, but I think carefully before I build, and I stay committed to learning and improving through patience, problem-solving, and respectful collaboration. I believe good code isn't just about syntax; it's about intention.
-  </p>
-  <p>
-    I’m still learning — and that’s something I’ve learned to embrace. My goal is to grow into a reliable developer who creates practical, human-centered tools that actually make a difference. I’m always open to new challenges, and I hope to keep improving — quietly, steadily, one project at a time.
-  </p>
-</IntroText>
+            <IntroText>
+              <IntroHeader>
+                <ProfileImageContainer>
+                  <ProfileImage src="/me/22.png" alt="Profile" />
+                  <DecorativeCircle />
+                </ProfileImageContainer>
+                <IntroHeaderText>
+                  <h3>Turning Ideas into Digital Reality</h3>
+                  <p>Web Developer | Problem Solver | Continuous Learner</p>
+                </IntroHeaderText>
+              </IntroHeader>
+              <p>
+                I'm a quiet but driven IT graduate who enjoys turning ideas into simple, meaningful tech solutions. I've worked on both web and mobile development projects, explored cloud tools, and integrated APIs — not just to finish tasks, but to understand how things truly work. Every project I've worked on has been part of a learning journey.
+              </p>
+              <p>
+                As a woman in tech, I take pride in showing up with focus, consistency, and a results-driven mindset. I may not be the loudest in the room, but I think carefully before I build, and I stay committed to learning and improving through patience, problem-solving, and respectful collaboration. I believe good code isn't just about syntax; it's about intention.
+              </p>
+              <p>
+                I'm still learning — and that's something I've learned to embrace. My goal is to grow into a reliable developer who creates practical, human-centered tools that actually make a difference. I'm always open to new challenges, and I hope to keep improving — quietly, steadily, one project at a time.
+              </p>
+            </IntroText>
 
-
-            <SkillsContainer>
-              <SkillsTitle>Technical Skills</SkillsTitle>
-              <SkillsGrid>
-                <SkillCategory>
-                  <h4>Frontend</h4>
-                  <SkillList>
-                    <li>HTML5 / CSS3</li>
-                    <li>JavaScript</li>
-                    <li>React.js</li>
-                    <li>Tailwind CSS</li>
-                  </SkillList>
-                </SkillCategory>
-                <SkillCategory>
-                  <h4>Backend</h4>
-                  <SkillList>
-                    <li>PHP</li>
-                    <li>MySQL</li>
-                    <li>Firebase (Blaze Plan – Auth, Firestore, Storage)</li>
-                  </SkillList>
-                </SkillCategory>
-                <SkillCategory>
-                  <h4>Tools & Others</h4>
-                  <SkillList>
-                    <li>Git / GitHub / GitLab</li>
-                    <li>Flutter (for mobile development)</li>
-                    <li>Docker</li>
-                    <li>Google Cloud Platform (GCS / Firebase Hosting)</li>
-                  </SkillList>
-                </SkillCategory>
-              </SkillsGrid>
-            </SkillsContainer>
+            <PhotoGallery>
+              <GalleryImage 
+                src="/me/1.png" 
+                alt="Working on project" 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                viewport={{ once: true, margin: "-100px" }}
+              />
+              <GalleryImage 
+                src="/me/2.jpg" 
+                alt="Presenting work" 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                viewport={{ once: true, margin: "-100px" }}
+              />
+            </PhotoGallery>
           </IntroContainer>
 
           <InfoGrid>
@@ -225,7 +245,6 @@ const About = () => {
                 <AchievementsTitle>Notable Achievements:</AchievementsTitle>
                 <AchievementsList>
                   <li>Deans Lister (1st Year)</li>
-                  <li>Presidents Lister (4th Year, 1st Semester)</li>
                 </AchievementsList>
               </InfoItem>
             </InfoCard>
@@ -242,7 +261,7 @@ const About = () => {
                 <IconWrapper $color="#e15759">
                   <FaLaptopCode />
                 </IconWrapper>
-                 Experience
+                Experience
               </InfoTitle>
               <InfoItem>
                 <h3>Web Developer Intern</h3>
@@ -335,80 +354,145 @@ const About = () => {
             </InfoCard>
           </InfoGrid>
 
-          {/* Image Carousel Section */}
-          <CarouselSection
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            viewport={{ once: true, margin: "-100px" }}
-            onMouseEnter={() => setIsAutoPlaying(false)}
-            onMouseLeave={() => setIsAutoPlaying(true)}
-          >
+          {/* Gallery Section */}
+          <GallerySection>
             <SectionTitle
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true, margin: "-100px" }}
             >
-              Internship Moments
+              My Experience
               <TitleUnderline />
             </SectionTitle>
-            <CarouselDescription>
-              Moments from my internship journey at eComia — a glimpse into teamwork, presentations, and milestones.
-            </CarouselDescription>
-            <CarouselContainer>
-              <CarouselButton 
-                $direction="left" 
-                onClick={prevImage}
-                aria-label="Previous image"
+            <GalleryDescription>
+              Snapshots from my journey — a mix of learning moments, team collaborations, and the little milestones that made it meaningful.
+            </GalleryDescription>
+            
+            <FilterControls>
+              <FilterButton 
+                $active={filter === 'all'}
+                onClick={() => setFilter('all')}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <FiChevronLeft size={24} />
-              </CarouselButton>
-              
-              <AnimatePresence custom={direction} initial={false}>
-                <CarouselImage
-                  key={currentImageIndex}
-                  custom={direction}
-                  variants={variants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{
-                    x: { type: "spring", stiffness: 300, damping: 30 },
-                    opacity: { duration: 0.2 }
-                  }}
+                All
+              </FilterButton>
+              <FilterButton 
+                $active={filter === 'events'}
+                onClick={() => setFilter('events')}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Events
+              </FilterButton>
+              <FilterButton 
+                $active={filter === 'presentations'}
+                onClick={() => setFilter('presentations')}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Presentations
+              </FilterButton>
+              <FilterButton 
+                $active={filter === 'certifications'}
+                onClick={() => setFilter('certifications')}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Certifications
+              </FilterButton>
+            </FilterControls>
+            
+            <LandscapeGrid>
+              {filteredImages.map((image, index) => (
+                <LandscapeItem 
+                  key={index}
+                  layout
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                  onClick={() => setSelectedImage(index)}
+                  $category={image.category}
                 >
+                  <GalleryImageOverlay $category={image.category}>
+                    <FiZoomIn size={24} />
+                    <p>{image.description}</p>
+                  </GalleryImageOverlay>
                   <img 
-                    src={images[currentImageIndex].src} 
-                    alt={images[currentImageIndex].alt}
+                    src={image.src} 
+                    alt={image.alt}
                     loading="lazy"
                   />
-                  <CarouselCaption>
-                    {images[currentImageIndex].description}
-                  </CarouselCaption>
-                </CarouselImage>
-              </AnimatePresence>
-              
-              <CarouselButton 
-                $direction="right" 
-                onClick={nextImage}
-                aria-label="Next image"
-              >
-                <FiChevronRight size={24} />
-              </CarouselButton>
-            </CarouselContainer>
-            
-            <CarouselIndicators>
-              {images.map((_, index) => (
-                <CarouselIndicator 
-                  key={index}
-                  $active={index === currentImageIndex}
-                  onClick={() => goToImage(index)}
-                  aria-label={`Go to image ${index + 1}`}
-                />
+                </LandscapeItem>
               ))}
-            </CarouselIndicators>
-          </CarouselSection>
+            </LandscapeGrid>
+          </GallerySection>
+
+          {/* Image Modal */}
+          <AnimatePresence>
+            {selectedImage !== null && (
+              <ModalBackdrop
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setSelectedImage(null)}
+              >
+                <ModalContent
+                  variants={modalVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  onClick={(e) => e.stopPropagation()}
+                  $category={filteredImages[selectedImage].category}
+                >
+                  <CloseButton
+                    onClick={() => setSelectedImage(null)}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    &times;
+                  </CloseButton>
+                  <ModalImage 
+                    src={filteredImages[selectedImage].src} 
+                    alt={filteredImages[selectedImage].alt}
+                  />
+                  <ImageCaption>
+                    {filteredImages[selectedImage].description}
+                    <ImageCounter>
+                      {selectedImage + 1} / {filteredImages.length}
+                    </ImageCounter>
+                  </ImageCaption>
+                  <NavigationButtons>
+                    <NavButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedImage(prev => 
+                          prev === 0 ? filteredImages.length - 1 : (prev || 0) - 1
+                        );
+                      }}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      <FiChevronLeft size={28} />
+                    </NavButton>
+                    <NavButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedImage(prev => 
+                          prev === filteredImages.length - 1 ? 0 : (prev || 0) + 1
+                        );
+                      }}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      <FiChevronRight size={28} />
+                    </NavButton>
+                  </NavigationButtons>
+                </ModalContent>
+              </ModalBackdrop>
+            )}
+          </AnimatePresence>
         </AboutContent>
       </SectionContainer>
     </AboutSection>
@@ -417,7 +501,7 @@ const About = () => {
 
 // Styled Components
 const AboutSection = styled.section`
-  padding: 8rem 0;
+  padding: 6rem 0;
   background: ${({ theme }) => theme.colors.backgroundAlt};
   position: relative;
   overflow: hidden;
@@ -430,13 +514,13 @@ const AboutSection = styled.section`
     width: 100%;
     height: 100%;
     background: 
-      radial-gradient(circle at 20% 50%, ${({ theme }) => theme.colors.primary}08, transparent 30%),
-      radial-gradient(circle at 80% 70%, ${({ theme }) => theme.colors.secondary}08, transparent 25%);
+      radial-gradient(circle at 10% 30%, rgba(78, 121, 167, 0.05), transparent 25%),
+      radial-gradient(circle at 90% 70%, rgba(118, 183, 178, 0.05), transparent 25%);
     z-index: 0;
   }
 
   @media (max-width: 768px) {
-    padding: 5rem 0;
+    padding: 4rem 0;
   }
 `;
 
@@ -454,19 +538,24 @@ const SectionContainer = styled.div`
 
 const SectionTitle = styled(motion.h2)`
   text-align: center;
-  margin-bottom: 5rem;
-  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 4rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.textPrimary};
   position: relative;
   display: inline-block;
   width: 100%;
+
+  @media (max-width: 768px) {
+    font-size: 2rem;
+    margin-bottom: 3rem;
+  }
 `;
 
 const TitleUnderline = styled.div`
   width: 80px;
   height: 4px;
-  background: linear-gradient(90deg, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.secondary});
+  background: linear-gradient(90deg, #4e79a7, #76b7b2);
   margin: 1.5rem auto 0;
   border-radius: 2px;
 `;
@@ -474,96 +563,147 @@ const TitleUnderline = styled.div`
 const AboutContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4rem;
+  gap: 3rem;
 `;
 
 const IntroContainer = styled(motion.div)`
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 2rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
   background: ${({ theme }) => theme.colors.background};
-  padding: 2.5rem;
+  padding: 3rem;
   border-radius: 16px;
-  box-shadow: 0 5px 15px ${({ theme }) => theme.colors.shadow};
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   border: 1px solid ${({ theme }) => theme.colors.border};
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(78, 121, 167, 0.1), transparent 70%);
+    z-index: 0;
+  }
 
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
   }
 
   @media (max-width: 768px) {
-    padding: 1.5rem;
+    padding: 2rem;
+  }
+`;
+
+const IntroHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  grid-column: 1 / -1;
+`;
+
+const ProfileImageContainer = styled.div`
+  position: relative;
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    width: 100px;
+    height: 100px;
+  }
+`;
+
+const ProfileImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #4e79a7;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+`;
+
+const DecorativeCircle = styled.div`
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #4e79a7, #76b7b2);
+  z-index: 1;
+  animation: rotate 15s linear infinite;
+
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+`;
+
+const IntroHeaderText = styled.div`
+  h3 {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+    color: #4e79a7;
+    font-weight: 600;
+
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+    }
+  }
+
+  p {
+    font-size: 1rem;
+    color: ${({ theme }) => theme.colors.textSecondary};
+    margin: 0;
+    font-weight: 500;
   }
 `;
 
 const IntroText = styled.div`
   p {
     margin-bottom: 1.5rem;
-    font-size: clamp(1rem, 2vw, 1.1rem);
+    font-size: 1.1rem;
     line-height: 1.8;
     color: ${({ theme }) => theme.colors.text};
+    position: relative;
+    z-index: 1;
 
     &:last-child {
       margin-bottom: 0;
     }
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
   }
 `;
 
-const SkillsContainer = styled.div`
-  background: ${({ theme }) => theme.colors.backgroundAlt2};
-  padding: 1.5rem;
-  border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.colors.border};
-`;
-
-const SkillsTitle = styled.h4`
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-  color: ${({ theme }) => theme.colors.primary};
-  text-align: center;
-`;
-
-const SkillsGrid = styled.div`
+const PhotoGallery = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 1rem;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-content: start;
 `;
 
-const SkillCategory = styled.div`
-  h4 {
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    color: ${({ theme }) => theme.colors.text};
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+const GalleryImage = styled(motion.img)`
+  width: 100%;
+  border-radius: 12px;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
 
-    &::before {
-      content: '•';
-      color: ${({ theme }) => theme.colors.primary};
-    }
-  }
-`;
-
-const SkillList = styled.ul`
-  list-style-type: none;
-  padding-left: 0;
-  margin: 0;
-
-  li {
-    font-size: 0.9rem;
-    color: ${({ theme }) => theme.colors.textSecondary};
-    margin-bottom: 0.4rem;
-    position: relative;
-    padding-left: 1rem;
-
-    &::before {
-      content: '▹';
-      position: absolute;
-      left: 0;
-      color: ${({ theme }) => theme.colors.primary};
-    }
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   }
 `;
 
@@ -581,17 +721,15 @@ const InfoCard = styled(motion.div)`
   background: ${({ theme }) => theme.colors.background};
   border-radius: 16px;
   padding: 2rem;
-  box-shadow: 0 10px 30px ${({ theme }) => theme.colors.shadow};
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   border: 1px solid ${({ theme }) => theme.colors.border};
   position: relative;
   overflow: hidden;
-  will-change: transform;
 
   &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 35px ${({ theme }) => theme.colors.shadowHover};
-    border-color: ${({ theme }) => theme.colors.primary};
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
   }
 
   &::before {
@@ -601,11 +739,7 @@ const InfoCard = styled(motion.div)`
     left: 0;
     width: 4px;
     height: 100%;
-    background: linear-gradient(to bottom, ${({ theme }) => theme.colors.primary}, ${({ theme }) => theme.colors.secondary});
-  }
-
-  @media (max-width: 768px) {
-    padding: 1.5rem;
+    background: linear-gradient(to bottom, #4e79a7, #76b7b2);
   }
 `;
 
@@ -619,10 +753,10 @@ const IconWrapper = styled.span<IconWrapperProps>`
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: ${({ $color, theme }) => $color ? `${$color}20` : `${theme.colors.primary}20`};
+  background: ${({ $color }) => `${$color}20`};
   border-radius: 12px;
   margin-right: 12px;
-  color: ${({ $color, theme }) => $color || theme.colors.primary};
+  color: ${({ $color }) => $color};
   backdrop-filter: blur(5px);
 
   svg {
@@ -632,9 +766,9 @@ const IconWrapper = styled.span<IconWrapperProps>`
 `;
 
 const InfoTitle = styled.h3`
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   margin-bottom: 1.5rem;
-  color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.textPrimary};
   display: flex;
   align-items: center;
   font-weight: 600;
@@ -652,9 +786,9 @@ const InfoItem = styled.div`
   }
 
   h3 {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     margin-bottom: 0.5rem;
-    color: ${({ theme }) => theme.colors.text};
+    color: ${({ theme }) => theme.colors.textPrimary};
     font-weight: 600;
   }
 
@@ -667,7 +801,7 @@ const InfoItem = styled.div`
 `;
 
 const Company = styled.p`
-  color: ${({ theme }) => theme.colors.primary} !important;
+  color: #4e79a7 !important;
   font-weight: 500;
   margin-bottom: 0.3rem !important;
 `;
@@ -704,7 +838,7 @@ const Duration = styled.p`
 
 const AchievementsTitle = styled.p`
   font-weight: 500 !important;
-  color: ${({ theme }) => theme.colors.text} !important;
+  color: ${({ theme }) => theme.colors.textPrimary} !important;
   margin-top: 0.8rem !important;
 `;
 
@@ -725,31 +859,47 @@ const AchievementsList = styled.ul`
       content: '▹';
       position: absolute;
       left: 0;
-      color: ${({ theme }) => theme.colors.primary};
+      color: #4e79a7;
       font-weight: bold;
     }
   }
 `;
 
+const SkillsGrid = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+`;
+
+const SkillPill = styled.span`
+  background: rgba(78, 121, 167, 0.1);
+  color: #4e79a7;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+`;
+
 const CertificationLink = styled(motion.a)`
   display: inline-flex;
   align-items: center;
-  color: ${({ theme }) => theme.colors.primary};
+  color: #4e79a7;
   text-decoration: none;
   font-weight: 500;
   transition: all 0.2s ease;
   padding: 0.5rem 1rem;
   border-radius: 8px;
-  background: ${({ theme }) => theme.colors.primaryLight};
+  background: rgba(78, 121, 167, 0.1);
   margin-top: 0.5rem;
   font-size: 0.9rem;
   gap: 0.5rem;
 
   &:hover {
     color: white;
-    background: ${({ theme }) => theme.colors.primary};
+    background: #4e79a7;
     text-decoration: none;
-    box-shadow: 0 5px 15px ${({ theme }) => theme.colors.primary}30;
+    box-shadow: 0 5px 15px rgba(78, 121, 167, 0.3);
   }
 
   svg {
@@ -761,134 +911,237 @@ const CertificationLink = styled(motion.a)`
   }
 `;
 
-const CarouselSection = styled(motion.div)`
-  margin-top: 3rem;
+const GallerySection = styled.section`
+  margin-top: 4rem;
   width: 100%;
 `;
 
-const CarouselDescription = styled.p`
+const GalleryDescription = styled.p`
   text-align: center;
   max-width: 700px;
-  margin: 0 auto 3rem;
+  margin: 0 auto 2rem;
   font-size: 1rem;
   color: ${({ theme }) => theme.colors.textSecondary};
   line-height: 1.6;
 `;
 
-const CarouselContainer = styled.div`
-  position: relative;
-  max-width: 800px;
-  margin: 0 auto;
+const FilterControls = styled.div`
   display: flex;
-  align-items: center;
   justify-content: center;
-  height: 500px;
-
-  @media (max-width: 768px) {
-    height: 350px;
-  }
-
-  @media (max-width: 480px) {
-    height: 250px;
-  }
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
 `;
 
-interface CarouselButtonProps {
-  $direction: 'left' | 'right';
+interface FilterButtonProps {
+  $active: boolean;
 }
 
-const CarouselButton = styled.button<CarouselButtonProps>`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: ${({ theme }) => theme.colors.background};
+const FilterButton = styled(motion.button)<FilterButtonProps>`
+  padding: 0.5rem 1.5rem;
+  border-radius: 30px;
   border: none;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: ${({ $active }) => $active ? '#4e79a7' : 'transparent'};
+  color: ${({ $active }) => $active ? 'white' : '#4e79a7'};
+  font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  color: ${({ theme }) => theme.colors.primary};
   transition: all 0.3s ease;
-  opacity: 0.8;
+  border: 1px solid ${({ $active }) => $active ? 'transparent' : '#4e79a7'};
 
   &:hover {
-    background: ${({ theme }) => theme.colors.primary};
-    color: white;
-    transform: translateY(-50%) scale(1.1);
-    opacity: 1;
-  }
-
-  ${({ $direction }) => $direction === 'left' ? 'left: -25px;' : 'right: -25px;'}
-
-  @media (max-width: 768px) {
-    width: 40px;
-    height: 40px;
-    ${({ $direction }) => $direction === 'left' ? 'left: -15px;' : 'right: -15px;'}
+    background: ${({ $active }) => $active ? '#3a5d80' : 'rgba(78, 121, 167, 0.1)'};
   }
 `;
 
-const CarouselImage = styled(motion.div)`
-  position: absolute;
-  width: 100%;
-  max-width: 800px;
-  height: 100%;
+const LandscapeGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+`;
+
+interface LandscapeItemProps {
+  $category: string;
+}
+
+const LandscapeItem = styled(motion.div)<LandscapeItemProps>`
+  position: relative;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  background-color: #f0f0f0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  aspect-ratio: 16/9;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    
+    img {
+      transform: scale(1.05);
+    }
+    
+    div {
+      opacity: 1;
+    }
+  }
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.5s ease;
   }
 `;
 
-const CarouselCaption = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-  color: white;
-  padding: 1.5rem 1rem 0.5rem;
-  text-align: center;
-  font-size: 0.9rem;
-`;
-
-const CarouselIndicators = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 1.5rem;
-  gap: 0.8rem;
-`;
-
-interface CarouselIndicatorProps {
-  $active: boolean;
+interface GalleryImageOverlayProps {
+  $category: string;
 }
 
-const CarouselIndicator = styled.button<CarouselIndicatorProps>`
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: ${({ $active, theme }) => 
-    $active ? theme.colors.primary : 'rgba(0, 0, 0, 0.2)'};
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-  padding: 0;
+const GalleryImageOverlay = styled.div<GalleryImageOverlayProps>`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: ${({ $category }) => {
+    switch($category) {
+      case 'events': 
+        return 'linear-gradient(to top, rgba(78, 121, 167, 0.85), transparent)';
+      case 'presentations':
+        return 'linear-gradient(to top, rgba(225, 87, 89, 0.85), transparent)';
+      case 'team':
+        return 'linear-gradient(to top, rgba(118, 183, 178, 0.85), transparent)';
+      default:
+        return 'linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent)';
+    }
+  }};
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  
+  p {
+    text-align: center;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+  
+  svg {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+`;
 
+const ModalBackdrop = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+`;
+
+interface ModalContentProps {
+  $category: string;
+}
+
+const ModalContent = styled(motion.div)<ModalContentProps>`
+  position: relative;
+  max-width: 90%;
+  max-height: 90vh;
+  background: ${({ theme }) => theme.colors.background};
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  border-top: 5px solid ${({ $category }) => {
+    switch($category) {
+      case 'events': return '#4e79a7';
+      case 'presentations': return '#e15759';
+      case 'team': return '#76b7b2';
+      default: return '#4e79a7';
+    }
+  }};
+`;
+
+const CloseButton = styled(motion.button)`
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+`;
+
+const ModalImage = styled.img`
+  max-width: 100%;
+  max-height: 80vh;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
+`;
+
+const ImageCaption = styled.div`
+  padding: 1.5rem;
+  text-align: center;
+  background: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.textPrimary};
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const ImageCounter = styled.span`
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+`;
+
+const NavigationButtons = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1rem;
+  transform: translateY(-50%);
+  z-index: 5;
+`;
+
+const NavButton = styled(motion.button)`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  
   &:hover {
-    transform: scale(1.2);
-    background: ${({ theme }) => theme.colors.primary};
+    background: rgba(0, 0, 0, 0.7);
   }
 `;
 
