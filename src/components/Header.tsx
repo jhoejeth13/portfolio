@@ -162,8 +162,8 @@ const Header = ({ toggleTheme, theme }: HeaderProps) => {
                   onClick={toggleTheme}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {theme === 'light' ? <FiMoon size={20} /> : <FiSun size={20} />}
-                  <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+                  {/* {theme === 'light' ? <FiMoon size={20} /> : <FiSun size={20} />}
+                  <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span> */}
                 </MobileThemeToggle>
               </MobileMenuFooter>
             </MobileMenu>
