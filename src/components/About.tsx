@@ -4,14 +4,21 @@ import { useState, useEffect, useCallback } from 'react';
 import { FiChevronLeft, FiChevronRight, FiExternalLink, FiZoomIn } from 'react-icons/fi';
 import { FaGraduationCap, FaCertificate, FaLaptopCode } from 'react-icons/fa';
 
+interface ImageItem {
+  src: string;
+  alt: string;
+  description: string;
+  category: 'events' | 'presentations' | 'certifications';
+}
+
 const About = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [direction, setDirection] = useState(1);
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
-  const [filter, setFilter] = useState< 'events' | 'presentations'|'certifications'>('events');
+  const [filter, setFilter] = useState<'events' | 'presentations' | 'certifications'>('events');
 
-  const images = [
+  const images: ImageItem[] = [
     { src: "/intern/2.jpg", alt: "Internship moment", description: "SOS 10th Year Anniversary and 2024 Year-End Glitz & Glam Party", category: 'events' },
     { src: "/intern/11.jpg", alt: "Internship moment", description: "SOS 10th Year Anniversary and 2024 Year-End Glitz & Glam Party", category: 'events' },
     { src: "/intern/7.jpg", alt: "Team presentation", description: "Presenting our final project to the CEO — nerve-wracking but fulfilling", category: 'presentations' },
@@ -25,8 +32,7 @@ const About = () => {
     { src: "/intern/5.jpg", alt: "Team photo", description: "Group photo with the internship team and Supervisor", category: 'certifications' }
   ];
 
-  // const filteredImages = filter === 'all' ? images : images.filter(img => img.category === filter);
-const filteredImages = images.filter(img => img.category === filter);
+  const filteredImages = images.filter(img => img.category === filter);
 
   const nextImage = useCallback(() => {
     setDirection(1);
@@ -44,9 +50,11 @@ const filteredImages = images.filter(img => img.category === filter);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
-    if (isAutoPlaying) intervalId = setInterval(() => nextImage(), 5000);
+    if (isAutoPlaying && filteredImages.length > 0) {
+      intervalId = setInterval(() => nextImage(), 5000);
+    }
     return () => { if (intervalId) clearInterval(intervalId) };
-  }, [isAutoPlaying, nextImage]);
+  }, [isAutoPlaying, nextImage, filteredImages.length]);
 
   const goToImage = (index: number) => {
     setDirection(index > currentImageIndex ? 1 : -1);
@@ -66,28 +74,32 @@ const filteredImages = images.filter(img => img.category === filter);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  const variants = {
-    enter: (direction: number) => ({ x: direction > 0 ? 500 : -500, opacity: 0 }),
-    center: { x: 0, opacity: 1 },
-    exit: (direction: number) => ({ x: direction < 0 ? 500 : -500, opacity: 0 })
-  };
-
   const modalVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
+    hidden: { opacity: 0, scale: 0.95 },
     visible: { opacity: 1, scale: 1 },
-    exit: { opacity: 0, scale: 0.9 }
+    exit: { opacity: 0, scale: 0.95 }
   };
 
   return (
     <AboutSection id="about">
       <SectionContainer>
-        <SectionTitle initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true, margin: "-100px" }}>
+        <SectionTitle 
+          initial={{ opacity: 0, y: 20 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.6 }} 
+          viewport={{ once: true, margin: "-100px" }}
+        >
           About Me
           <TitleUnderline />
         </SectionTitle>
 
         <AboutContent>
-          <IntroContainer initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }} viewport={{ once: true, margin: "-100px" }}>
+          <IntroContainer 
+            initial={{ opacity: 0, y: 20 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.2 }} 
+            viewport={{ once: true, margin: "-100px" }}
+          >
             <IntroText>
               <IntroHeader>
                 <ProfileImageContainer>
@@ -105,13 +117,33 @@ const filteredImages = images.filter(img => img.category === filter);
             </IntroText>
 
             <PhotoGallery>
-              <GalleryImage src="/me/1.png" alt="Working on project" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }} viewport={{ once: true, margin: "-100px" }} />
-              <GalleryImage src="/me/2.jpg" alt="Presenting work" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }} viewport={{ once: true, margin: "-100px" }} />
+              <GalleryImage 
+                src="/me/1.png" 
+                alt="Working on project" 
+                initial={{ opacity: 0, y: 20 }} 
+                whileInView={{ opacity: 1, y: 0 }} 
+                transition={{ duration: 0.6, delay: 0.3 }} 
+                viewport={{ once: true, margin: "-100px" }} 
+              />
+              <GalleryImage 
+                src="/me/2.jpg" 
+                alt="Presenting work" 
+                initial={{ opacity: 0, y: 20 }} 
+                whileInView={{ opacity: 1, y: 0 }} 
+                transition={{ duration: 0.6, delay: 0.4 }} 
+                viewport={{ once: true, margin: "-100px" }} 
+              />
             </PhotoGallery>
           </IntroContainer>
 
           <InfoGrid>
-            <InfoCard whileHover={{ y: -5 }} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }} viewport={{ once: true, margin: "-100px" }}>
+            <InfoCard 
+              whileHover={{ y: -5 }} 
+              initial={{ opacity: 0, y: 20 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.6, delay: 0.3 }} 
+              viewport={{ once: true, margin: "-100px" }}
+            >
               <InfoTitle>
                 <IconWrapper $color="#4e79a7"><FaGraduationCap /></IconWrapper>
                 Education
@@ -127,12 +159,16 @@ const filteredImages = images.filter(img => img.category === filter);
                     <li>Presidents Lister (4th Year, 1st semester)</li>
                   </AchievementsList>
                 </InfoItem>
-                <InfoItem>
-                </InfoItem>
               </ScrollableContent>
             </InfoCard>
 
-            <InfoCard whileHover={{ y: -5 }} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }} viewport={{ once: true, margin: "-100px" }}>
+            <InfoCard 
+              whileHover={{ y: -5 }} 
+              initial={{ opacity: 0, y: 20 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.6, delay: 0.4 }} 
+              viewport={{ once: true, margin: "-100px" }}
+            >
               <InfoTitle>
                 <IconWrapper $color="#e15759"><FaLaptopCode /></IconWrapper>
                 Experience
@@ -176,7 +212,13 @@ const filteredImages = images.filter(img => img.category === filter);
               </ScrollableContent>
             </InfoCard>
 
-            <InfoCard whileHover={{ y: -5 }} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5 }} viewport={{ once: true, margin: "-100px" }}>
+            <InfoCard 
+              whileHover={{ y: -5 }} 
+              initial={{ opacity: 0, y: 20 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.6, delay: 0.5 }} 
+              viewport={{ once: true, margin: "-100px" }}
+            >
               <InfoTitle>
                 <IconWrapper $color="#76b7b2"><FaCertificate /></IconWrapper>
                 Certifications
@@ -186,7 +228,13 @@ const filteredImages = images.filter(img => img.category === filter);
                   <h3>JavaScript Essentials 1</h3>
                   <Company>Issued by Cisco</Company>
                   <Duration>June 25, 2025</Duration>
-                  <CertificationLink href="https://www.credly.com/badges/1ee3fbc7-9bd5-47d4-8d2a-3bf78e227f5f/public_url" target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <CertificationLink 
+                    href="https://www.credly.com/badges/1ee3fbc7-9bd5-47d4-8d2a-3bf78e227f5f/public_url" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    whileHover={{ scale: 1.05 }} 
+                    whileTap={{ scale: 0.95 }}
+                  >
                     View Credential <FiExternalLink size={14} />
                   </CertificationLink>
                 </InfoItem>
@@ -200,36 +248,33 @@ const filteredImages = images.filter(img => img.category === filter);
                   <h3>API Integration Training</h3>
                   <Company>Staff Outsourcing Solutions</Company>
                   <Duration>September 27, 2024</Duration>
-                  <AchievementsList>
-                  </AchievementsList>
                 </InfoItem>
                 <InfoItem>
                   <h3>Back End Training</h3>
                   <Company>Staff Outsourcing Solutions</Company>
                   <Duration>September 13, 2024</Duration>
-                  <AchievementsList>
-                  </AchievementsList>
                 </InfoItem>
                 <InfoItem>
                   <h3>Front End and JavaScript Training</h3>
                   <Company>Staff Outsourcing Solutions</Company>
                   <Duration>September 13, 2024</Duration>
-                  <AchievementsList>
-                  </AchievementsList>
                 </InfoItem>
                 <InfoItem>
                   <h3>UI/UX Design Training</h3>
                   <Company>Staff Outsourcing Solutions</Company>
                   <Duration>September 13, 2024</Duration>
-                  <AchievementsList>
-                  </AchievementsList>
                 </InfoItem>
               </ScrollableContent>
             </InfoCard>
           </InfoGrid>
 
           <GallerySection>
-            <SectionTitle initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true, margin: "-100px" }}>
+            <SectionTitle 
+              initial={{ opacity: 0, y: 20 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.6 }} 
+              viewport={{ once: true, margin: "-100px" }}
+            >
               My Experience
               <TitleUnderline />
             </SectionTitle>
@@ -238,15 +283,43 @@ const filteredImages = images.filter(img => img.category === filter);
             </GalleryDescription>
             
             <FilterControls>
-              {/* <FilterButton $active={filter === 'all'} onClick={() => setFilter('all')} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>All</FilterButton> */}
-              <FilterButton $active={filter === 'events'} onClick={() => setFilter('events')} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>Events</FilterButton>
-              <FilterButton $active={filter === 'presentations'} onClick={() => setFilter('presentations')} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>Presentations</FilterButton>
-              <FilterButton $active={filter === 'certifications'} onClick={() => setFilter('certifications')} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>Certifications</FilterButton>
+              <FilterButton 
+                $active={filter === 'events'} 
+                onClick={() => setFilter('events')} 
+                whileHover={{ scale: 1.05 }} 
+                whileTap={{ scale: 0.95 }}
+              >
+                Events
+              </FilterButton>
+              <FilterButton 
+                $active={filter === 'presentations'} 
+                onClick={() => setFilter('presentations')} 
+                whileHover={{ scale: 1.05 }} 
+                whileTap={{ scale: 0.95 }}
+              >
+                Presentations
+              </FilterButton>
+              <FilterButton 
+                $active={filter === 'certifications'} 
+                onClick={() => setFilter('certifications')} 
+                whileHover={{ scale: 1.05 }} 
+                whileTap={{ scale: 0.95 }}
+              >
+                Certifications
+              </FilterButton>
             </FilterControls>
             
             <LandscapeGrid>
               {filteredImages.map((image, index) => (
-                <LandscapeItem key={index} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} onClick={() => setSelectedImage(index)} $category={image.category}>
+                <LandscapeItem 
+                  key={index} 
+                  layout 
+                  initial={{ opacity: 0 }} 
+                  animate={{ opacity: 1 }} 
+                  transition={{ duration: 0.5 }} 
+                  onClick={() => setSelectedImage(index)} 
+                  $category={image.category}
+                >
                   <GalleryImageOverlay $category={image.category}>
                     <FiZoomIn size={24} />
                     <p>{image.description}</p>
@@ -259,19 +332,56 @@ const filteredImages = images.filter(img => img.category === filter);
 
           <AnimatePresence>
             {selectedImage !== null && (
-              <ModalBackdrop initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedImage(null)}>
-                <ModalContent variants={modalVariants} initial="hidden" animate="visible" exit="exit" onClick={(e) => e.stopPropagation()} $category={filteredImages[selectedImage].category}>
-                  <CloseButton onClick={() => setSelectedImage(null)} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>&times;</CloseButton>
-                  <ModalImage src={filteredImages[selectedImage].src} alt={filteredImages[selectedImage].alt} />
+              <ModalBackdrop 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                exit={{ opacity: 0 }} 
+                onClick={() => setSelectedImage(null)}
+              >
+                <ModalContent 
+                  variants={modalVariants} 
+                  initial="hidden" 
+                  animate="visible" 
+                  exit="exit" 
+                  onClick={(e: { stopPropagation: () => any; }) => e.stopPropagation()} 
+                  $category={filteredImages[selectedImage].category}
+                >
+                  <CloseButton 
+                    onClick={() => setSelectedImage(null)} 
+                    whileHover={{ scale: 1.1 }} 
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    &times;
+                  </CloseButton>
+                  <ModalImageContainer>
+                    <ModalImage 
+                      src={filteredImages[selectedImage].src} 
+                      alt={filteredImages[selectedImage].alt} 
+                    />
+                  </ModalImageContainer>
                   <ImageCaption>
                     {filteredImages[selectedImage].description}
                     <ImageCounter>{selectedImage + 1} / {filteredImages.length}</ImageCounter>
                   </ImageCaption>
                   <NavigationButtons>
-                    <NavButton onClick={(e) => { e.stopPropagation(); setSelectedImage(prev => prev === 0 ? filteredImages.length - 1 : (prev || 0) - 1) }} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                    <NavButton 
+                      onClick={(e) => { 
+                        e.stopPropagation(); 
+                        setSelectedImage(prev => prev === 0 ? filteredImages.length - 1 : (prev || 0) - 1) 
+                      }} 
+                      whileHover={{ scale: 1.1 }} 
+                      whileTap={{ scale: 0.9 }}
+                    >
                       <FiChevronLeft size={28} />
                     </NavButton>
-                    <NavButton onClick={(e) => { e.stopPropagation(); setSelectedImage(prev => prev === filteredImages.length - 1 ? 0 : (prev || 0) + 1) }} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                    <NavButton 
+                      onClick={(e) => { 
+                        e.stopPropagation(); 
+                        setSelectedImage(prev => prev === filteredImages.length - 1 ? 0 : (prev || 0) + 1) 
+                      }} 
+                      whileHover={{ scale: 1.1 }} 
+                      whileTap={{ scale: 0.9 }}
+                    >
                       <FiChevronRight size={28} />
                     </NavButton>
                   </NavigationButtons>
@@ -288,7 +398,7 @@ const filteredImages = images.filter(img => img.category === filter);
 // Styled Components
 const AboutSection = styled.section`
   padding: 6rem 0;
-  background: ${({ theme }) => theme.colors.backgroundAlt};
+  background: ${({ theme }) => theme.colors?.backgroundAlt || '#f8f9fa'};
   position: relative;
   overflow: hidden;
 
@@ -300,11 +410,13 @@ const AboutSection = styled.section`
     width: 100%;
     height: 100%;
     background: radial-gradient(circle at 10% 30%, rgba(78, 121, 167, 0.05), transparent 25%),
-      radial-gradient(circle at 90% 70%, rgba(118, 183, 178, 0.05), transparent 25%);
+                radial-gradient(circle at 90% 70%, rgba(118, 183, 178, 0.05), transparent 25%);
     z-index: 0;
   }
 
-  @media (max-width: 768px) { padding: 4rem 0; }
+  @media (max-width: 768px) {
+    padding: 4rem 0;
+  }
 `;
 
 const SectionContainer = styled.div`
@@ -314,7 +426,9 @@ const SectionContainer = styled.div`
   position: relative;
   z-index: 1;
 
-  @media (max-width: 768px) { padding: 0 1.5rem; }
+  @media (max-width: 768px) {
+    padding: 0 1.5rem;
+  }
 `;
 
 const SectionTitle = styled(motion.h2)`
@@ -322,7 +436,7 @@ const SectionTitle = styled(motion.h2)`
   margin-bottom: 4rem;
   font-size: 2.5rem;
   font-weight: 700;
-  color: ${({ theme }) => theme.colors.textPrimary};
+  color: ${({ theme }) => theme.colors?.textPrimary || '#333'};
   position: relative;
   display: inline-block;
   width: 100%;
@@ -351,11 +465,11 @@ const IntroContainer = styled(motion.div)`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
-  background: ${({ theme }) => theme.colors.background};
+  background: ${({ theme }) => theme.colors?.background || '#fff'};
   padding: 3rem;
   border-radius: 16px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  border: 1px solid ${({ theme }) => theme.colors?.border || '#eaeaea'};
   position: relative;
   overflow: hidden;
 
@@ -370,8 +484,13 @@ const IntroContainer = styled(motion.div)`
     z-index: 0;
   }
 
-  @media (max-width: 1024px) { grid-template-columns: 1fr; }
-  @media (max-width: 768px) { padding: 2rem; }
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+
+  @media (max-width: 768px) {
+    padding: 2rem;
+  }
 `;
 
 const IntroHeader = styled.div`
@@ -388,7 +507,10 @@ const ProfileImageContainer = styled.div`
   height: 120px;
   flex-shrink: 0;
 
-  @media (max-width: 768px) { width: 100px; height: 100px; }
+  @media (max-width: 768px) {
+    width: 100px;
+    height: 100px;
+  }
 `;
 
 const ProfileImage = styled.img`
@@ -426,12 +548,14 @@ const IntroHeaderText = styled.div`
     color: #4e79a7;
     font-weight: 600;
 
-    @media (max-width: 768px) { font-size: 1.5rem; }
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+    }
   }
 
   p {
     font-size: 1rem;
-    color: ${({ theme }) => theme.colors.textSecondary};
+    color: ${({ theme }) => theme.colors?.textSecondary || '#666'};
     margin: 0;
     font-weight: 500;
   }
@@ -442,12 +566,17 @@ const IntroText = styled.div`
     margin-bottom: 1.5rem;
     font-size: 1.1rem;
     line-height: 1.8;
-    color: ${({ theme }) => theme.colors.text};
+    color: ${({ theme }) => theme.colors?.text || '#333'};
     position: relative;
     z-index: 1;
 
-    &:last-child { margin-bottom: 0; }
-    @media (max-width: 768px) { font-size: 1rem; }
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
   }
 `;
 
@@ -478,16 +607,18 @@ const InfoGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
 
-  @media (max-width: 768px) { grid-template-columns: 1fr; }
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const InfoCard = styled(motion.div)`
-  background: ${({ theme }) => theme.colors.background};
+  background: ${({ theme }) => theme.colors?.background || '#fff'};
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  border: 1px solid ${({ theme }) => theme.colors?.border || '#eaeaea'};
   position: relative;
   overflow: hidden;
   height: 600px;
@@ -520,17 +651,21 @@ const ScrollableContent = styled.div`
   &::-webkit-scrollbar {
     width: 6px;
   }
+  
   &::-webkit-scrollbar-track {
-    background: ${({ theme }) => theme.colors.border};
+    background: ${({ theme }) => theme.colors?.border || '#eaeaea'};
     border-radius: 3px;
   }
+  
   &::-webkit-scrollbar-thumb {
     background: #4e79a7;
     border-radius: 3px;
   }
 `;
 
-interface IconWrapperProps { $color?: string; }
+interface IconWrapperProps {
+  $color?: string;
+}
 
 const IconWrapper = styled.span<IconWrapperProps>`
   display: inline-flex;
@@ -544,13 +679,16 @@ const IconWrapper = styled.span<IconWrapperProps>`
   color: ${({ $color }) => $color};
   backdrop-filter: blur(5px);
 
-  svg { width: 20px; height: 20px; }
+  svg {
+    width: 20px;
+    height: 20px;
+  }
 `;
 
 const InfoTitle = styled.h3`
   font-size: 1.5rem;
   margin-bottom: 1.5rem;
-  color: ${({ theme }) => theme.colors.textPrimary};
+  color: ${({ theme }) => theme.colors?.textPrimary || '#333'};
   display: flex;
   align-items: center;
   font-weight: 600;
@@ -559,7 +697,7 @@ const InfoTitle = styled.h3`
 const InfoItem = styled.div`
   margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px dashed ${({ theme }) => theme.colors.border};
+  border-bottom: 1px dashed ${({ theme }) => theme.colors?.border || '#eaeaea'};
 
   &:last-child {
     margin-bottom: 0;
@@ -570,13 +708,13 @@ const InfoItem = styled.div`
   h3 {
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
-    color: ${({ theme }) => theme.colors.textPrimary};
+    color: ${({ theme }) => theme.colors?.textPrimary || '#333'};
     font-weight: 600;
   }
 
   p {
     font-size: 0.95rem;
-    color: ${({ theme }) => theme.colors.textSecondary};
+    color: ${({ theme }) => theme.colors?.textSecondary || '#666'};
     margin-bottom: 0.5rem;
     line-height: 1.6;
   }
@@ -589,7 +727,7 @@ const Company = styled.p`
 `;
 
 const Location = styled.p`
-  color: ${({ theme }) => theme.colors.textSecondary} !important;
+  color: ${({ theme }) => theme.colors?.textSecondary || '#666'} !important;
   font-size: 0.85rem !important;
   margin-bottom: 0.5rem !important;
   font-style: italic;
@@ -597,11 +735,14 @@ const Location = styled.p`
   align-items: center;
   gap: 0.3rem;
 
-  &::before { content: '📍'; font-size: 0.9rem; }
+  &::before {
+    content: '📍';
+    font-size: 0.9rem;
+  }
 `;
 
 const Duration = styled.p`
-  color: ${({ theme }) => theme.colors.textSecondary} !important;
+  color: ${({ theme }) => theme.colors?.textSecondary || '#666'} !important;
   font-size: 0.85rem !important;
   margin-bottom: 0.8rem !important;
   opacity: 0.9;
@@ -609,12 +750,15 @@ const Duration = styled.p`
   align-items: center;
   gap: 0.3rem;
 
-  &::before { content: '📅'; font-size: 0.9rem; }
+  &::before {
+    content: '📅';
+    font-size: 0.9rem;
+  }
 `;
 
 const AchievementsTitle = styled.p`
   font-weight: 500 !important;
-  color: ${({ theme }) => theme.colors.textPrimary} !important;
+  color: ${({ theme }) => theme.colors?.textPrimary || '#333'} !important;
   margin-top: 0.8rem !important;
 `;
 
@@ -625,7 +769,7 @@ const AchievementsList = styled.ul`
 
   li {
     font-size: 0.9rem;
-    color: ${({ theme }) => theme.colors.text};
+    color: ${({ theme }) => theme.colors?.text || '#333'};
     margin-bottom: 0.5rem;
     position: relative;
     padding-left: 1.5rem;
@@ -664,7 +808,10 @@ const CertificationLink = styled(motion.a)`
 
   svg {
     transition: transform 0.2s ease;
-    &:hover { transform: translateX(3px); }
+    
+    &:hover {
+      transform: translateX(3px);
+    }
   }
 `;
 
@@ -678,7 +825,7 @@ const GalleryDescription = styled.p`
   max-width: 700px;
   margin: 0 auto 2rem;
   font-size: 1rem;
-  color: ${({ theme }) => theme.colors.textSecondary};
+  color: ${({ theme }) => theme.colors?.textSecondary || '#666'};
   line-height: 1.6;
 `;
 
@@ -690,7 +837,9 @@ const FilterControls = styled.div`
   flex-wrap: wrap;
 `;
 
-interface FilterButtonProps { $active: boolean; }
+interface FilterButtonProps {
+  $active: boolean;
+}
 
 const FilterButton = styled(motion.button)<FilterButtonProps>`
   padding: 0.5rem 1.5rem;
@@ -703,7 +852,9 @@ const FilterButton = styled(motion.button)<FilterButtonProps>`
   transition: all 0.3s ease;
   border: 1px solid ${({ $active }) => $active ? 'transparent' : '#4e79a7'};
 
-  &:hover { background: ${({ $active }) => $active ? '#3a5d80' : 'rgba(78, 121, 167, 0.1)'}; }
+  &:hover {
+    background: ${({ $active }) => $active ? '#3a5d80' : 'rgba(78, 121, 167, 0.1)'};
+  }
 `;
 
 const LandscapeGrid = styled.div`
@@ -712,7 +863,9 @@ const LandscapeGrid = styled.div`
   gap: 1.5rem;
 `;
 
-interface LandscapeItemProps { $category: string; }
+interface LandscapeItemProps {
+  $category: string;
+}
 
 const LandscapeItem = styled(motion.div)<LandscapeItemProps>`
   position: relative;
@@ -721,24 +874,46 @@ const LandscapeItem = styled(motion.div)<LandscapeItemProps>`
   cursor: pointer;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  aspect-ratio: 16/9;
+  height: 250px; /* Fixed height */
+  width: 100%; /* Full width of grid cell */
+
+  /* Center the image */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5; /* Light background for images with transparency */
 
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    img { transform: scale(1.05); }
-    div { opacity: 1; }
+    
+    img {
+      transform: scale(1.03);
+    }
+    
+    div {
+      opacity: 1;
+    }
   }
-
+height: auto;
   img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain; /* Show full image without cropping */
     transition: transform 0.5s ease;
   }
 `;
 
-interface GalleryImageOverlayProps { $category: string; }
+interface GalleryImageOverlayProps {
+  $category: string;
+}
+
+interface ModalContentProps {
+  $category: 'events' | 'presentations' | 'certifications';
+  theme?: any; // Optional theme prop if using styled-components theme
+}
 
 const GalleryImageOverlay = styled.div<GalleryImageOverlayProps>`
   position: absolute;
@@ -748,9 +923,9 @@ const GalleryImageOverlay = styled.div<GalleryImageOverlayProps>`
   bottom: 0;
   background: ${({ $category }) => {
     switch($category) {
-      case 'events': return 'linear-gradient(to top, rgba(78, 121, 167, 0.85), transparent)';
-      case 'presentations': return 'linear-gradient(to top, rgba(225, 87, 89, 0.85), transparent)';
-      case 'team': return 'linear-gradient(to top, rgba(118, 183, 178, 0.85), transparent)';
+      case 'events': return 'linear-gradient(to top, rgba(255, 255, 255, 0.95), transparent)';
+      case 'presentations': return 'linear-gradient(to top, rgba(255, 255, 255, 0.85), transparent)';
+      case 'certifications': return 'linear-gradient(to top, rgba(255, 255, 255, 0.85), transparent)';
       default: return 'linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent)';
     }
   }};
@@ -791,26 +966,6 @@ const ModalBackdrop = styled(motion.div)`
   padding: 2rem;
 `;
 
-interface ModalContentProps { $category: string; }
-
-const ModalContent = styled(motion.div)<ModalContentProps>`
-  position: relative;
-  max-width: 90%;
-  max-height: 90vh;
-  background: ${({ theme }) => theme.colors.background};
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-  border-top: 5px solid ${({ $category }) => {
-    switch($category) {
-      case 'events': return '#4e79a7';
-      case 'presentations': return '#e15759';
-      case 'team': return '#76b7b2';
-      default: return '#4e79a7';
-    }
-  }};
-`;
-
 const CloseButton = styled(motion.button)`
   position: absolute;
   top: 15px;
@@ -827,21 +982,77 @@ const CloseButton = styled(motion.button)`
   justify-content: center;
   cursor: pointer;
   z-index: 10;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: scale(1.1);
+  }
+`;
+
+const ModalContent = styled(motion.div)<ModalContentProps>`
+  position: relative;
+  width: 90vw; /* Use viewport width for better responsiveness */
+  max-width: min(900px, 90vw); /* Never exceed 900px or 90% of viewport */
+  max-height: 90vh; /* Use viewport height instead of fixed value */
+  background: ${({ theme }) => theme.colors?.background || '#fff'};
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  border-top: 5px solid ${({ $category }) => {
+    switch($category) {
+      case 'events': return '#4e79a7';
+      case 'presentations': return '#e15759';
+      case 'certifications': return '#76b7b2';
+      default: return '#4e79a7';
+    }
+  }};
+  display: flex;
+  flex-direction: column;
+
+  /* Responsive adjustments */
+  @media (max-width: 1024px) { /* Laptop sizes */
+    max-width: 80vw;
+    max-height: 70vh;
+  }
+
+  @media (max-width: 768px) { /* Tablet sizes */
+    max-width: 98vw;
+    max-height: 90vh;
+    border-radius: 12px;
+  }
+
+  @media (max-width: 480px) { /* Mobile sizes */
+    max-width: 100vw;
+    max-height: 95vh;
+    border-radius: 0;
+    width: 100%;
+  }
+`;
+
+const ModalImageContainer = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  overflow: hidden;
 `;
 
 const ModalImage = styled.img`
-  max-width: 100%;
-  max-height: 80vh;
-  display: block;
-  margin: 0 auto;
-  object-fit: contain;
+  max-width: 90vw; /* 90% of viewport width */
+  max-height: 80vh; /* 80% of viewport height */
+  width: auto;
+  height: auto;
+  object-fit: contain; /* Show full image without cropping */
+  border-radius: 8px;
 `;
 
 const ImageCaption = styled.div`
   padding: 1.5rem;
   text-align: center;
-  background: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.textPrimary};
+  background: ${({ theme }) => theme.colors?.background || '#fff'};
+  color: ${({ theme }) => theme.colors?.textPrimary || '#333'};
   font-size: 1rem;
   display: flex;
   flex-direction: column;
@@ -850,7 +1061,7 @@ const ImageCaption = styled.div`
 
 const ImageCounter = styled.span`
   font-size: 0.9rem;
-  color: ${({ theme }) => theme.colors.textSecondary};
+  color: ${({ theme }) => theme.colors?.textSecondary || '#666'};
 `;
 
 const NavigationButtons = styled.div`
@@ -877,7 +1088,9 @@ const NavButton = styled(motion.button)`
   justify-content: center;
   cursor: pointer;
   
-  &:hover { background: rgba(0, 0, 0, 0.7); }
+  &:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
 `;
 
 export default About;
