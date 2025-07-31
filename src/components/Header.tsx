@@ -158,13 +158,13 @@ const Header = ({ toggleTheme, theme }: HeaderProps) => {
                   </SocialIcon>
                 </MobileSocialIcons>
                 
-                <MobileThemeToggle 
-                  onClick={toggleTheme}
-                  whileTap={{ scale: 0.95 }}
-                >
+                {/* <MobileThemeToggle  */}
+                  {/* onClick={toggleTheme}
+                  whileTap={{ scale: 0.95 }} */}
+                {/* > */}
                   {/* {theme === 'light' ? <FiMoon size={20} /> : <FiSun size={20} />}
                   <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span> */}
-                </MobileThemeToggle>
+                {/* </MobileThemeToggle> */}
               </MobileMenuFooter>
             </MobileMenu>
           )}
