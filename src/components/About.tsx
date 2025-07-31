@@ -9,7 +9,7 @@ const About = () => {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [direction, setDirection] = useState(1);
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
-  const [filter, setFilter] = useState<'all' | 'events' | 'presentations'|'certifications'>('all');
+  const [filter, setFilter] = useState<'events' | 'presentations' | 'certifications'>('events');
 
   const images = [
     {
@@ -80,9 +80,7 @@ const About = () => {
     }
   ];
 
-  const filteredImages = filter === 'all' 
-    ? images 
-    : images.filter(img => img.category === filter);
+  const filteredImages = images.filter(img => img.category === filter);
 
   const nextImage = useCallback(() => {
     setDirection(1);
@@ -370,14 +368,6 @@ const About = () => {
             </GalleryDescription>
             
             <FilterControls>
-              <FilterButton 
-                $active={filter === 'all'}
-                onClick={() => setFilter('all')}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                All
-              </FilterButton>
               <FilterButton 
                 $active={filter === 'events'}
                 onClick={() => setFilter('events')}
