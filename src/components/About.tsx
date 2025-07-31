@@ -9,111 +9,43 @@ const About = () => {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [direction, setDirection] = useState(1);
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
-  const [filter, setFilter] = useState<'all' | 'events' | 'presentations'|'certifications'>('all');
+  const [filter, setFilter] = useState< 'events' | 'presentations'|'certifications'>('events');
 
   const images = [
-    {
-      src: "/intern/2.jpg",
-      alt: "Internship moment",
-      description: "SOS 10th Year Anniversary and 2024 Year-End Glitz & Glam Party",
-      category: 'events'
-    },
-    {
-      src: "/intern/11.jpg",
-      alt: "Internship moment",
-      description: "SOS 10th Year Anniversary and 2024 Year-End Glitz & Glam Party",
-      category: 'events'
-    },
-    {
-      src: "/intern/7.jpg",
-      alt: "Team presentation",
-      description: "Presenting our final project to the CEO — nerve-wracking but fulfilling",
-      category: 'presentations'
-    },
-    {
-      src: "/intern/3.jpg",
-      alt: "Team presentation",
-      description: "Presenting our final project to the CEO — nerve-wracking but fulfilling",
-      category: 'presentations'
-    },
-    {
-      src: "/intern/4.jpg",
-      alt: "Project demo",
-      description: "Presenting our final project to the CEO — nerve-wracking but fulfilling",
-      category: 'presentations'
-    },
-    {
-      src: "/intern/6.jpg",
-      alt: "Team photo",
-      description: "Project demo presentation with the team",
-      category: 'presentations'
-    },
-    {
-      src: "/intern/7.jpeg",
-      alt: "Team photo",
-      description: "Project demo presentation with the team",
-      category: 'presentations'
-    },
-    {
-      src: "/intern/12.jpg",
-      alt: "Certificate awarding",
-      description: "Receiving certificate of completion",
-      category: 'certifications'
-    },
-    {
-      src: "/intern/1.jpg",
-      alt: "Certificate awarding",
-      description: "Receiving certificate of completion",
-      category: 'certifications'
-    },
-    {
-      src: "/intern/8.jpg",
-      alt: "Certificate awarding",
-      description: "Receiving certificate of completion",
-      category: 'certifications'
-    },
-    {
-      src: "/intern/5.jpg",
-      alt: "Team photo",
-      description: "Group photo with the internship team and Supervisor",
-      category: 'certifications'
-    }
+    { src: "/intern/2.jpg", alt: "Internship moment", description: "SOS 10th Year Anniversary and 2024 Year-End Glitz & Glam Party", category: 'events' },
+    { src: "/intern/11.jpg", alt: "Internship moment", description: "SOS 10th Year Anniversary and 2024 Year-End Glitz & Glam Party", category: 'events' },
+    { src: "/intern/7.jpg", alt: "Team presentation", description: "Presenting our final project to the CEO — nerve-wracking but fulfilling", category: 'presentations' },
+    { src: "/intern/3.jpg", alt: "Team presentation", description: "Presenting our final project to the CEO — nerve-wracking but fulfilling", category: 'presentations' },
+    { src: "/intern/4.jpg", alt: "Project demo", description: "Presenting our final project to the CEO — nerve-wracking but fulfilling", category: 'presentations' },
+    { src: "/intern/6.jpg", alt: "Team photo", description: "Project demo presentation with the team", category: 'presentations' },
+    { src: "/intern/7.jpeg", alt: "Team photo", description: "Project demo presentation with the team", category: 'presentations' },
+    { src: "/intern/12.jpg", alt: "Certificate awarding", description: "Receiving certificate of completion", category: 'certifications' },
+    { src: "/intern/1.jpg", alt: "Certificate awarding", description: "Receiving certificate of completion", category: 'certifications' },
+    { src: "/intern/8.jpg", alt: "Certificate awarding", description: "Receiving certificate of completion", category: 'certifications' },
+    { src: "/intern/5.jpg", alt: "Team photo", description: "Group photo with the internship team and Supervisor", category: 'certifications' }
   ];
 
-  const filteredImages = filter === 'all' 
-    ? images 
-    : images.filter(img => img.category === filter);
+  // const filteredImages = filter === 'all' ? images : images.filter(img => img.category === filter);
+const filteredImages = images.filter(img => img.category === filter);
 
   const nextImage = useCallback(() => {
     setDirection(1);
-    setCurrentImageIndex(prevIndex => 
-      prevIndex === filteredImages.length - 1 ? 0 : prevIndex + 1
-    );
+    setCurrentImageIndex(prevIndex => prevIndex === filteredImages.length - 1 ? 0 : prevIndex + 1);
     setIsAutoPlaying(false);
     setTimeout(() => setIsAutoPlaying(true), 10000);
   }, [filteredImages.length]);
 
   const prevImage = useCallback(() => {
     setDirection(-1);
-    setCurrentImageIndex(prevIndex => 
-      prevIndex === 0 ? filteredImages.length - 1 : prevIndex - 1
-    );
+    setCurrentImageIndex(prevIndex => prevIndex === 0 ? filteredImages.length - 1 : prevIndex - 1);
     setIsAutoPlaying(false);
     setTimeout(() => setIsAutoPlaying(true), 10000);
   }, [filteredImages.length]);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
-    
-    if (isAutoPlaying) {
-      intervalId = setInterval(() => {
-        nextImage();
-      }, 5000);
-    }
-
-    return () => {
-      if (intervalId) clearInterval(intervalId);
-    };
+    if (isAutoPlaying) intervalId = setInterval(() => nextImage(), 5000);
+    return () => { if (intervalId) clearInterval(intervalId) };
   }, [isAutoPlaying, nextImage]);
 
   const goToImage = (index: number) => {
@@ -124,35 +56,20 @@ const About = () => {
   };
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'ArrowRight') {
-      nextImage();
-    } else if (e.key === 'ArrowLeft') {
-      prevImage();
-    } else if (e.key === 'Escape' && selectedImage !== null) {
-      setSelectedImage(null);
-    }
+    if (e.key === 'ArrowRight') nextImage();
+    else if (e.key === 'ArrowLeft') prevImage();
+    else if (e.key === 'Escape' && selectedImage !== null) setSelectedImage(null);
   }, [nextImage, prevImage, selectedImage]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
   const variants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 500 : -500,
-      opacity: 0
-    }),
-    center: {
-      x: 0,
-      opacity: 1
-    },
-    exit: (direction: number) => ({
-      x: direction < 0 ? 500 : -500,
-      opacity: 0
-    })
+    enter: (direction: number) => ({ x: direction > 0 ? 500 : -500, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (direction: number) => ({ x: direction < 0 ? 500 : -500, opacity: 0 })
   };
 
   const modalVariants = {
@@ -164,23 +81,13 @@ const About = () => {
   return (
     <AboutSection id="about">
       <SectionContainer>
-        <SectionTitle
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true, margin: "-100px" }}
-        >
+        <SectionTitle initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true, margin: "-100px" }}>
           About Me
           <TitleUnderline />
         </SectionTitle>
 
         <AboutContent>
-          <IntroContainer
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            viewport={{ once: true, margin: "-100px" }}
-          >
+          <IntroContainer initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }} viewport={{ once: true, margin: "-100px" }}>
             <IntroText>
               <IntroHeader>
                 <ProfileImageContainer>
@@ -192,300 +99,179 @@ const About = () => {
                   <p>Web Developer | Problem Solver | Continuous Learner</p>
                 </IntroHeaderText>
               </IntroHeader>
-              <p>
-                I'm a quiet but driven IT graduate who enjoys turning ideas into simple, meaningful tech solutions. I've worked on both web and mobile development projects, explored cloud tools, and integrated APIs — not just to finish tasks, but to understand how things truly work. Every project I've worked on has been part of a learning journey.
-              </p>
-              <p>
-                As a woman in tech, I take pride in showing up with focus, consistency, and a results-driven mindset. I may not be the loudest in the room, but I think carefully before I build, and I stay committed to learning and improving through patience, problem-solving, and respectful collaboration. I believe good code isn't just about syntax; it's about intention.
-              </p>
-              <p>
-                I'm still learning — and that's something I've learned to embrace. My goal is to grow into a reliable developer who creates practical, human-centered tools that actually make a difference. I'm always open to new challenges, and I hope to keep improving — quietly, steadily, one project at a time.
-              </p>
+              <p>I'm a quiet but driven IT graduate who enjoys turning ideas into simple, meaningful tech solutions. I've worked on both web and mobile development projects, explored cloud tools, and integrated APIs — not just to finish tasks, but to understand how things truly work. Every project I've worked on has been part of a learning journey.</p>
+              <p>As a woman in tech, I take pride in showing up with focus, consistency, and a results-driven mindset. I may not be the loudest in the room, but I think carefully before I build, and I stay committed to learning and improving through patience, problem-solving, and respectful collaboration. I believe good code isn't just about syntax; it's about intention.</p>
+              <p>I'm still learning — and that's something I've learned to embrace. My goal is to grow into a reliable developer who creates practical, human-centered tools that actually make a difference. I'm always open to new challenges, and I hope to keep improving — quietly, steadily, one project at a time.</p>
             </IntroText>
 
             <PhotoGallery>
-              <GalleryImage 
-                src="/me/1.png" 
-                alt="Working on project" 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                viewport={{ once: true, margin: "-100px" }}
-              />
-              <GalleryImage 
-                src="/me/2.jpg" 
-                alt="Presenting work" 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                viewport={{ once: true, margin: "-100px" }}
-              />
+              <GalleryImage src="/me/1.png" alt="Working on project" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }} viewport={{ once: true, margin: "-100px" }} />
+              <GalleryImage src="/me/2.jpg" alt="Presenting work" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }} viewport={{ once: true, margin: "-100px" }} />
             </PhotoGallery>
           </IntroContainer>
 
           <InfoGrid>
-            {/* Education Section */}
-            <InfoCard
-              whileHover={{ y: -5 }}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              viewport={{ once: true, margin: "-100px" }}
-            >
+            <InfoCard whileHover={{ y: -5 }} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }} viewport={{ once: true, margin: "-100px" }}>
               <InfoTitle>
-                <IconWrapper $color="#4e79a7">
-                  <FaGraduationCap />
-                </IconWrapper>
+                <IconWrapper $color="#4e79a7"><FaGraduationCap /></IconWrapper>
                 Education
               </InfoTitle>
-              <InfoItem>
-                <h3>Caraga State University – Cabadbaran Campus</h3>
-                <p>Bachelor of Science in Information Technology</p>
-                <Duration>2021 – 2025</Duration>
-                <AchievementsTitle>Notable Achievements:</AchievementsTitle>
-                <AchievementsList>
-                  <li>Deans Lister (1st Year)</li>
-                </AchievementsList>
-              </InfoItem>
+              <ScrollableContent>
+                <InfoItem>
+                  <h3>Caraga State University – Cabadbaran Campus</h3>
+                  <p>Bachelor of Science in Information Technology</p>
+                  <Duration>2021 – 2025</Duration>
+                  <AchievementsTitle>Notable Achievements:</AchievementsTitle>
+                  <AchievementsList>
+                    <li>Deans Lister (1st Year)</li>
+                    <li>Presidents Lister (4th Year, 1st semester)</li>
+                  </AchievementsList>
+                </InfoItem>
+                <InfoItem>
+                </InfoItem>
+              </ScrollableContent>
             </InfoCard>
 
-            {/* Work Experience Section */}
-            <InfoCard
-              whileHover={{ y: -5 }}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              viewport={{ once: true, margin: "-100px" }}
-            >
+            <InfoCard whileHover={{ y: -5 }} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }} viewport={{ once: true, margin: "-100px" }}>
               <InfoTitle>
-                <IconWrapper $color="#e15759">
-                  <FaLaptopCode />
-                </IconWrapper>
+                <IconWrapper $color="#e15759"><FaLaptopCode /></IconWrapper>
                 Experience
               </InfoTitle>
-              <InfoItem>
-                <h3>Web Developer Intern</h3>
-                <Company>Staff Outsourcing Solutions (eComia)</Company>
-                <Location>7F MDCT Building, Leyte Loop, Cebu Business Park, Cebu City, 6000 Philippines</Location>
-                <Duration>August 2024 – January 2025</Duration>
-                <AchievementsTitle>Key Responsibilities:</AchievementsTitle>
-                <AchievementsList>
-                  <li>Developed two complex, responsive web and mobile applications in collaboration with fellow intern team members using modern development tools and best practices</li>
-                  <li>Worked closely with designers, developers, and testers to meet functional requirements and project deadlines</li>
-                  <li>Gained hands-on experience in technologies such as React, Flutter, Firebase, Docker, and API integration</li>
-                  <li>Utilized Git for version control to manage codebase changes and coordinate effectively with the team</li>
-                </AchievementsList>
-              </InfoItem>
-              <InfoItem>
-                <h3>Freelance Web Developer</h3>
-                <Duration>2023 – Present</Duration>
-                <AchievementsTitle>Projects:</AchievementsTitle>
-                <AchievementsList>
-                  <li>Developed custom web-based projects for students using PHP, focusing on functionality, usability, and academic requirements</li>
-                  <li>Collaborated with clients to gather project requirements, implement requested features, and deliver responsive, presentable systems on time</li>
-                  <li>Built user interfaces with HTML, CSS, JavaScript, and integrated backend logic using PHP and MySQL</li>
-                </AchievementsList>
-              </InfoItem>
-              <InfoItem>
-                <h3>Freelance Categorization / Image Annotation</h3>
-                <Company>Remotasks (Online Job)</Company>
-                <Duration>2021-2022</Duration>
-                <AchievementsList>
-                  <li>Performed accurate image annotation and data categorization for machine learning projects</li>
-                  <li>Maintained high quality standards while meeting project deadlines</li>
-                </AchievementsList>
-              </InfoItem>
+              <ScrollableContent>
+                <InfoItem>
+                  <h3>Web Developer Intern</h3>
+                  <Company>Staff Outsourcing Solutions (eComia)</Company>
+                  <Location>7F MDCT Building, Leyte Loop, Cebu Business Park, Cebu City, 6000 Philippines</Location>
+                  <Duration>August 2024 – January 2025</Duration>
+                  <AchievementsTitle>Key Responsibilities:</AchievementsTitle>
+                  <AchievementsList>
+                    <li>Developed two complex, responsive web and mobile applications in collaboration with fellow intern team members using modern development tools and best practices</li>
+                    <li>Worked closely with designers, developers, and testers to meet functional requirements and project deadlines</li>
+                    <li>Gained hands-on experience in technologies such as React, Flutter, Firebase, Docker, and API integration</li>
+                    <li>Utilized Git for version control to manage codebase changes and coordinate effectively with the team</li>
+                    <li>Participated in agile development processes including daily standups and sprint planning</li>
+                  </AchievementsList>
+                </InfoItem>
+                <InfoItem>
+                  <h3>Freelance Web Developer</h3>
+                  <Duration>2023 – Present</Duration>
+                  <AchievementsTitle>Projects:</AchievementsTitle>
+                  <AchievementsList>
+                    <li>Developed custom web-based projects for students using PHP, focusing on functionality, usability, and academic requirements</li>
+                    <li>Collaborated with clients to gather project requirements, implement requested features, and deliver responsive, presentable systems on time</li>
+                    <li>Built user interfaces with HTML, CSS, JavaScript, and integrated backend logic using PHP and MySQL</li>
+                    <li>Created documentation and provided training for end-users on system operation</li>
+                  </AchievementsList>
+                </InfoItem>
+                <InfoItem>
+                  <h3>Freelance Categorization / Image Annotation</h3>
+                  <Company>Remotasks (Online Job)</Company>
+                  <Duration>2021-2022</Duration>
+                  <AchievementsList>
+                    <li>Performed accurate image annotation and data categorization for machine learning projects</li>
+                    <li>Maintained high quality standards while meeting project deadlines</li>
+                    <li>Worked independently with minimal supervision to complete tasks efficiently</li>
+                  </AchievementsList>
+                </InfoItem>
+              </ScrollableContent>
             </InfoCard>
 
-            {/* Certifications Section */}
-            <InfoCard
-              whileHover={{ y: -5 }}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              viewport={{ once: true, margin: "-100px" }}
-            >
+            <InfoCard whileHover={{ y: -5 }} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.5 }} viewport={{ once: true, margin: "-100px" }}>
               <InfoTitle>
-                <IconWrapper $color="#76b7b2">
-                  <FaCertificate />
-                </IconWrapper>
+                <IconWrapper $color="#76b7b2"><FaCertificate /></IconWrapper>
                 Certifications
               </InfoTitle>
-              <InfoItem>
-                <h3>JavaScript Essentials 1</h3>
-                <Company>Issued by Cisco</Company>
-                <Duration>June 25, 2025</Duration>
-                <CertificationLink 
-                  href="https://www.credly.com/badges/1ee3fbc7-9bd5-47d4-8d2a-3bf78e227f5f/public_url" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  View Credential <FiExternalLink size={14} />
-                </CertificationLink>
-              </InfoItem>
-              <InfoItem>
-                <h3>DICT EDP Diagnostic Examination - Programming</h3>
-                <Company>Caraga State University Cabadbaran Campus</Company>
-                <Duration>May 2, 2025</Duration>
-                <p>Qualified for ICT Proficiency Certification Examination</p>
-              </InfoItem>
-              <InfoItem>
-                <h3>API Integration Training</h3>
-                <Company>Staff Outsourcing Solutions</Company>
-                <Duration>September 27, 2024</Duration>
-              </InfoItem>
-              <InfoItem>
-                <h3>Back End Training</h3>
-                <Company>Staff Outsourcing Solutions</Company>
-                <Duration>September 13, 2024</Duration>
-              </InfoItem>
-              <InfoItem>
-                <h3>Front End and JavaScript Training</h3>
-                <Company>Staff Outsourcing Solutions</Company>
-                <Duration>September 13, 2024</Duration>
-              </InfoItem>
-              <InfoItem>
-                <h3>UI/UX Design Training</h3>
-                <Company>Staff Outsourcing Solutions</Company>
-                <Duration>September 13, 2024</Duration>
-              </InfoItem>
+              <ScrollableContent>
+                <InfoItem>
+                  <h3>JavaScript Essentials 1</h3>
+                  <Company>Issued by Cisco</Company>
+                  <Duration>June 25, 2025</Duration>
+                  <CertificationLink href="https://www.credly.com/badges/1ee3fbc7-9bd5-47d4-8d2a-3bf78e227f5f/public_url" target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    View Credential <FiExternalLink size={14} />
+                  </CertificationLink>
+                </InfoItem>
+                <InfoItem>
+                  <h3>DICT EDP Diagnostic Examination - Programming</h3>
+                  <Company>Caraga State University Cabadbaran Campus</Company>
+                  <Duration>May 2, 2025</Duration>
+                  <p>Qualified for ICT Proficiency Certification Examination</p>
+                </InfoItem>
+                <InfoItem>
+                  <h3>API Integration Training</h3>
+                  <Company>Staff Outsourcing Solutions</Company>
+                  <Duration>September 27, 2024</Duration>
+                  <AchievementsList>
+                  </AchievementsList>
+                </InfoItem>
+                <InfoItem>
+                  <h3>Back End Training</h3>
+                  <Company>Staff Outsourcing Solutions</Company>
+                  <Duration>September 13, 2024</Duration>
+                  <AchievementsList>
+                  </AchievementsList>
+                </InfoItem>
+                <InfoItem>
+                  <h3>Front End and JavaScript Training</h3>
+                  <Company>Staff Outsourcing Solutions</Company>
+                  <Duration>September 13, 2024</Duration>
+                  <AchievementsList>
+                  </AchievementsList>
+                </InfoItem>
+                <InfoItem>
+                  <h3>UI/UX Design Training</h3>
+                  <Company>Staff Outsourcing Solutions</Company>
+                  <Duration>September 13, 2024</Duration>
+                  <AchievementsList>
+                  </AchievementsList>
+                </InfoItem>
+              </ScrollableContent>
             </InfoCard>
           </InfoGrid>
 
-          {/* Gallery Section */}
           <GallerySection>
-            <SectionTitle
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true, margin: "-100px" }}
-            >
+            <SectionTitle initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true, margin: "-100px" }}>
               My Experience
               <TitleUnderline />
             </SectionTitle>
             <GalleryDescription>
-              Snapshots from my journey — a mix of learning moments, team collaborations, and the little milestones that made it meaningful.
+              Snapshots from my journey at eComia — a mix of learning moments, team collaborations, and the little milestones that made it meaningful.
             </GalleryDescription>
             
             <FilterControls>
-              <FilterButton 
-                $active={filter === 'all'}
-                onClick={() => setFilter('all')}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                All
-              </FilterButton>
-              <FilterButton 
-                $active={filter === 'events'}
-                onClick={() => setFilter('events')}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Events
-              </FilterButton>
-              <FilterButton 
-                $active={filter === 'presentations'}
-                onClick={() => setFilter('presentations')}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Presentations
-              </FilterButton>
-              <FilterButton 
-                $active={filter === 'certifications'}
-                onClick={() => setFilter('certifications')}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Certifications
-              </FilterButton>
+              {/* <FilterButton $active={filter === 'all'} onClick={() => setFilter('all')} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>All</FilterButton> */}
+              <FilterButton $active={filter === 'events'} onClick={() => setFilter('events')} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>Events</FilterButton>
+              <FilterButton $active={filter === 'presentations'} onClick={() => setFilter('presentations')} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>Presentations</FilterButton>
+              <FilterButton $active={filter === 'certifications'} onClick={() => setFilter('certifications')} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>Certifications</FilterButton>
             </FilterControls>
             
             <LandscapeGrid>
               {filteredImages.map((image, index) => (
-                <LandscapeItem 
-                  key={index}
-                  layout
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-                  onClick={() => setSelectedImage(index)}
-                  $category={image.category}
-                >
+                <LandscapeItem key={index} layout initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} onClick={() => setSelectedImage(index)} $category={image.category}>
                   <GalleryImageOverlay $category={image.category}>
                     <FiZoomIn size={24} />
                     <p>{image.description}</p>
                   </GalleryImageOverlay>
-                  <img 
-                    src={image.src} 
-                    alt={image.alt}
-                    loading="lazy"
-                  />
+                  <img src={image.src} alt={image.alt} loading="lazy" />
                 </LandscapeItem>
               ))}
             </LandscapeGrid>
           </GallerySection>
 
-          {/* Image Modal */}
           <AnimatePresence>
             {selectedImage !== null && (
-              <ModalBackdrop
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setSelectedImage(null)}
-              >
-                <ModalContent
-                  variants={modalVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                  onClick={(e) => e.stopPropagation()}
-                  $category={filteredImages[selectedImage].category}
-                >
-                  <CloseButton
-                    onClick={() => setSelectedImage(null)}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    &times;
-                  </CloseButton>
-                  <ModalImage 
-                    src={filteredImages[selectedImage].src} 
-                    alt={filteredImages[selectedImage].alt}
-                  />
+              <ModalBackdrop initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedImage(null)}>
+                <ModalContent variants={modalVariants} initial="hidden" animate="visible" exit="exit" onClick={(e) => e.stopPropagation()} $category={filteredImages[selectedImage].category}>
+                  <CloseButton onClick={() => setSelectedImage(null)} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>&times;</CloseButton>
+                  <ModalImage src={filteredImages[selectedImage].src} alt={filteredImages[selectedImage].alt} />
                   <ImageCaption>
                     {filteredImages[selectedImage].description}
-                    <ImageCounter>
-                      {selectedImage + 1} / {filteredImages.length}
-                    </ImageCounter>
+                    <ImageCounter>{selectedImage + 1} / {filteredImages.length}</ImageCounter>
                   </ImageCaption>
                   <NavigationButtons>
-                    <NavButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedImage(prev => 
-                          prev === 0 ? filteredImages.length - 1 : (prev || 0) - 1
-                        );
-                      }}
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
+                    <NavButton onClick={(e) => { e.stopPropagation(); setSelectedImage(prev => prev === 0 ? filteredImages.length - 1 : (prev || 0) - 1) }} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                       <FiChevronLeft size={28} />
                     </NavButton>
-                    <NavButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedImage(prev => 
-                          prev === filteredImages.length - 1 ? 0 : (prev || 0) + 1
-                        );
-                      }}
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
+                    <NavButton onClick={(e) => { e.stopPropagation(); setSelectedImage(prev => prev === filteredImages.length - 1 ? 0 : (prev || 0) + 1) }} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                       <FiChevronRight size={28} />
                     </NavButton>
                   </NavigationButtons>
@@ -513,15 +299,12 @@ const AboutSection = styled.section`
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
-      radial-gradient(circle at 10% 30%, rgba(78, 121, 167, 0.05), transparent 25%),
+    background: radial-gradient(circle at 10% 30%, rgba(78, 121, 167, 0.05), transparent 25%),
       radial-gradient(circle at 90% 70%, rgba(118, 183, 178, 0.05), transparent 25%);
     z-index: 0;
   }
 
-  @media (max-width: 768px) {
-    padding: 4rem 0;
-  }
+  @media (max-width: 768px) { padding: 4rem 0; }
 `;
 
 const SectionContainer = styled.div`
@@ -531,9 +314,7 @@ const SectionContainer = styled.div`
   position: relative;
   z-index: 1;
 
-  @media (max-width: 768px) {
-    padding: 0 1.5rem;
-  }
+  @media (max-width: 768px) { padding: 0 1.5rem; }
 `;
 
 const SectionTitle = styled(motion.h2)`
@@ -589,13 +370,8 @@ const IntroContainer = styled(motion.div)`
     z-index: 0;
   }
 
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
-  }
-
-  @media (max-width: 768px) {
-    padding: 2rem;
-  }
+  @media (max-width: 1024px) { grid-template-columns: 1fr; }
+  @media (max-width: 768px) { padding: 2rem; }
 `;
 
 const IntroHeader = styled.div`
@@ -612,10 +388,7 @@ const ProfileImageContainer = styled.div`
   height: 120px;
   flex-shrink: 0;
 
-  @media (max-width: 768px) {
-    width: 100px;
-    height: 100px;
-  }
+  @media (max-width: 768px) { width: 100px; height: 100px; }
 `;
 
 const ProfileImage = styled.img`
@@ -653,9 +426,7 @@ const IntroHeaderText = styled.div`
     color: #4e79a7;
     font-weight: 600;
 
-    @media (max-width: 768px) {
-      font-size: 1.5rem;
-    }
+    @media (max-width: 768px) { font-size: 1.5rem; }
   }
 
   p {
@@ -675,13 +446,8 @@ const IntroText = styled.div`
     position: relative;
     z-index: 1;
 
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    @media (max-width: 768px) {
-      font-size: 1rem;
-    }
+    &:last-child { margin-bottom: 0; }
+    @media (max-width: 768px) { font-size: 1rem; }
   }
 `;
 
@@ -712,9 +478,7 @@ const InfoGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
+  @media (max-width: 768px) { grid-template-columns: 1fr; }
 `;
 
 const InfoCard = styled(motion.div)`
@@ -726,6 +490,9 @@ const InfoCard = styled(motion.div)`
   border: 1px solid ${({ theme }) => theme.colors.border};
   position: relative;
   overflow: hidden;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
 
   &:hover {
     transform: translateY(-5px);
@@ -743,9 +510,27 @@ const InfoCard = styled(motion.div)`
   }
 `;
 
-interface IconWrapperProps {
-  $color?: string;
-}
+const ScrollableContent = styled.div`
+  overflow-y: auto;
+  height: 100%;
+  padding-right: 0.5rem;
+  flex: 1;
+  
+  /* Custom scrollbar */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.colors.border};
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #4e79a7;
+    border-radius: 3px;
+  }
+`;
+
+interface IconWrapperProps { $color?: string; }
 
 const IconWrapper = styled.span<IconWrapperProps>`
   display: inline-flex;
@@ -759,10 +544,7 @@ const IconWrapper = styled.span<IconWrapperProps>`
   color: ${({ $color }) => $color};
   backdrop-filter: blur(5px);
 
-  svg {
-    width: 20px;
-    height: 20px;
-  }
+  svg { width: 20px; height: 20px; }
 `;
 
 const InfoTitle = styled.h3`
@@ -815,10 +597,7 @@ const Location = styled.p`
   align-items: center;
   gap: 0.3rem;
 
-  &::before {
-    content: '📍';
-    font-size: 0.9rem;
-  }
+  &::before { content: '📍'; font-size: 0.9rem; }
 `;
 
 const Duration = styled.p`
@@ -830,10 +609,7 @@ const Duration = styled.p`
   align-items: center;
   gap: 0.3rem;
 
-  &::before {
-    content: '📅';
-    font-size: 0.9rem;
-  }
+  &::before { content: '📅'; font-size: 0.9rem; }
 `;
 
 const AchievementsTitle = styled.p`
@@ -865,22 +641,6 @@ const AchievementsList = styled.ul`
   }
 `;
 
-const SkillsGrid = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-`;
-
-const SkillPill = styled.span`
-  background: rgba(78, 121, 167, 0.1);
-  color: #4e79a7;
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 500;
-`;
-
 const CertificationLink = styled(motion.a)`
   display: inline-flex;
   align-items: center;
@@ -904,10 +664,7 @@ const CertificationLink = styled(motion.a)`
 
   svg {
     transition: transform 0.2s ease;
-  }
-
-  &:hover svg {
-    transform: translateX(3px);
+    &:hover { transform: translateX(3px); }
   }
 `;
 
@@ -933,9 +690,7 @@ const FilterControls = styled.div`
   flex-wrap: wrap;
 `;
 
-interface FilterButtonProps {
-  $active: boolean;
-}
+interface FilterButtonProps { $active: boolean; }
 
 const FilterButton = styled(motion.button)<FilterButtonProps>`
   padding: 0.5rem 1.5rem;
@@ -948,9 +703,7 @@ const FilterButton = styled(motion.button)<FilterButtonProps>`
   transition: all 0.3s ease;
   border: 1px solid ${({ $active }) => $active ? 'transparent' : '#4e79a7'};
 
-  &:hover {
-    background: ${({ $active }) => $active ? '#3a5d80' : 'rgba(78, 121, 167, 0.1)'};
-  }
+  &:hover { background: ${({ $active }) => $active ? '#3a5d80' : 'rgba(78, 121, 167, 0.1)'}; }
 `;
 
 const LandscapeGrid = styled.div`
@@ -959,9 +712,7 @@ const LandscapeGrid = styled.div`
   gap: 1.5rem;
 `;
 
-interface LandscapeItemProps {
-  $category: string;
-}
+interface LandscapeItemProps { $category: string; }
 
 const LandscapeItem = styled(motion.div)<LandscapeItemProps>`
   position: relative;
@@ -975,14 +726,8 @@ const LandscapeItem = styled(motion.div)<LandscapeItemProps>`
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    
-    img {
-      transform: scale(1.05);
-    }
-    
-    div {
-      opacity: 1;
-    }
+    img { transform: scale(1.05); }
+    div { opacity: 1; }
   }
 
   img {
@@ -993,9 +738,7 @@ const LandscapeItem = styled(motion.div)<LandscapeItemProps>`
   }
 `;
 
-interface GalleryImageOverlayProps {
-  $category: string;
-}
+interface GalleryImageOverlayProps { $category: string; }
 
 const GalleryImageOverlay = styled.div<GalleryImageOverlayProps>`
   position: absolute;
@@ -1005,14 +748,10 @@ const GalleryImageOverlay = styled.div<GalleryImageOverlayProps>`
   bottom: 0;
   background: ${({ $category }) => {
     switch($category) {
-      case 'events': 
-        return 'linear-gradient(to top, rgba(78, 121, 167, 0.85), transparent)';
-      case 'presentations':
-        return 'linear-gradient(to top, rgba(225, 87, 89, 0.85), transparent)';
-      case 'team':
-        return 'linear-gradient(to top, rgba(118, 183, 178, 0.85), transparent)';
-      default:
-        return 'linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent)';
+      case 'events': return 'linear-gradient(to top, rgba(78, 121, 167, 0.85), transparent)';
+      case 'presentations': return 'linear-gradient(to top, rgba(225, 87, 89, 0.85), transparent)';
+      case 'team': return 'linear-gradient(to top, rgba(118, 183, 178, 0.85), transparent)';
+      default: return 'linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent)';
     }
   }};
   color: white;
@@ -1052,9 +791,7 @@ const ModalBackdrop = styled(motion.div)`
   padding: 2rem;
 `;
 
-interface ModalContentProps {
-  $category: string;
-}
+interface ModalContentProps { $category: string; }
 
 const ModalContent = styled(motion.div)<ModalContentProps>`
   position: relative;
@@ -1140,9 +877,7 @@ const NavButton = styled(motion.button)`
   justify-content: center;
   cursor: pointer;
   
-  &:hover {
-    background: rgba(0, 0, 0, 0.7);
-  }
+  &:hover { background: rgba(0, 0, 0, 0.7); }
 `;
 
 export default About;
