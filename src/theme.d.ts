@@ -4,6 +4,8 @@ import 'styled-components';
 declare module 'styled-components' {
   export interface DefaultTheme {
     colors: {
+      inputFocusBackground: string;
+      error: Interpolation<Substitute<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, { $hasError?: boolean | undefined; }>>;
       borderLight: Interpolation<FastOmit<Omit<HTMLMotionProps<"div">, "ref"> & RefAttributes<HTMLDivElement>, never>>;
       textTertiary: Interpolation<FastOmit<DetailedHTMLProps<HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>, never>>;
       textPrimary: Interpolation<FastOmit<Omit<HTMLMotionProps<"h1">, "ref"> & RefAttributes<HTMLHeadingElement>, never>>;

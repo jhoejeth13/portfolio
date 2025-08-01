@@ -136,7 +136,7 @@ export default function Skills() {
 <Title>Tech Stack & Expertise</Title>
 
           <Subtitle>
-The tech stack I’m experienced with and continue to work on.          </Subtitle>
+The technologies I'm experienced with and currently working on.         </Subtitle>
         </div>
 
         <MarqueeContainer>

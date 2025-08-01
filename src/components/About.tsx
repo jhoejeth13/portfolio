@@ -21,7 +21,7 @@ const About = () => {
   const images: ImageItem[] = [
     { src: "/intern/2.jpg", alt: "Internship moment", description: "SOS 10th Year Anniversary and 2024 Year-End Glitz & Glam Party", category: 'events' },
     { src: "/intern/11.jpg", alt: "Internship moment", description: "SOS 10th Year Anniversary and 2024 Year-End Glitz & Glam Party", category: 'events' },
-    { src: "/intern/7.jpg", alt: "Team presentation", description: "Presenting our final project to the CEO — nerve-wracking but fulfilling", category: 'presentations' },
+    // { src: "/intern/7.jpg", alt: "Team presentation", description: "Presenting our final project to the CEO — nerve-wracking but fulfilling", category: 'presentations' },
     { src: "/intern/3.jpg", alt: "Team presentation", description: "Presenting our final project to the CEO — nerve-wracking but fulfilling", category: 'presentations' },
     { src: "/intern/4.jpg", alt: "Project demo", description: "Presenting our final project to the CEO — nerve-wracking but fulfilling", category: 'presentations' },
     { src: "/intern/6.jpg", alt: "Team photo", description: "Project demo presentation with the team", category: 'presentations' },
@@ -279,8 +279,8 @@ const About = () => {
               <TitleUnderline />
             </SectionTitle>
             <GalleryDescription>
-              Snapshots from my journey at eComia — a mix of learning moments, team collaborations, and the little milestones that made it meaningful.
-            </GalleryDescription>
+Snapshots from my time at eComia — moments of learning, collaboration, and small wins during my internship that shaped my growth as a developer.
+           </GalleryDescription>
             
             <FilterControls>
               <FilterButton 
@@ -343,7 +343,7 @@ const About = () => {
                   initial="hidden" 
                   animate="visible" 
                   exit="exit" 
-                  onClick={(e: { stopPropagation: () => any; }) => e.stopPropagation()} 
+                  onClick={(e) => e.stopPropagation()} 
                   $category={filteredImages[selectedImage].category}
                 >
                   <CloseButton 
@@ -395,12 +395,13 @@ const About = () => {
   );
 };
 
-// Styled Components
+// Modernized Styled Components
 const AboutSection = styled.section`
-  padding: 6rem 0;
+  padding: 8rem 0;
   background: ${({ theme }) => theme.colors?.backgroundAlt || '#f8f9fa'};
   position: relative;
   overflow: hidden;
+  scroll-margin-top: 80px;
 
   &::before {
     content: '';
@@ -409,13 +410,14 @@ const AboutSection = styled.section`
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at 10% 30%, rgba(78, 121, 167, 0.05), transparent 25%),
-                radial-gradient(circle at 90% 70%, rgba(118, 183, 178, 0.05), transparent 25%);
+    background: 
+      radial-gradient(circle at 10% 30%, rgba(78, 121, 167, 0.05), transparent 25%),
+      radial-gradient(circle at 90% 70%, rgba(118, 183, 178, 0.05), transparent 25%);
     z-index: 0;
   }
 
   @media (max-width: 768px) {
-    padding: 4rem 0;
+    padding: 5rem 0;
   }
 `;
 
@@ -434,17 +436,12 @@ const SectionContainer = styled.div`
 const SectionTitle = styled(motion.h2)`
   text-align: center;
   margin-bottom: 4rem;
-  font-size: 2.5rem;
+  font-size: clamp(2rem, 5vw, 2.5rem);
   font-weight: 700;
-  color: ${({ theme }) => theme.colors?.textPrimary || '#333'};
+  color: ${({ theme }) => theme.colors?.textPrimary || '#2d3748'};
   position: relative;
   display: inline-block;
   width: 100%;
-
-  @media (max-width: 768px) {
-    font-size: 2rem;
-    margin-bottom: 3rem;
-  }
 `;
 
 const TitleUnderline = styled.div`
@@ -458,20 +455,26 @@ const TitleUnderline = styled.div`
 const AboutContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: 4rem;
 `;
 
 const IntroContainer = styled(motion.div)`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.2fr 1fr;
   gap: 3rem;
   background: ${({ theme }) => theme.colors?.background || '#fff'};
   padding: 3rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
   border: 1px solid ${({ theme }) => theme.colors?.border || '#eaeaea'};
   position: relative;
   overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+  }
 
   &::before {
     content: '';
@@ -490,6 +493,7 @@ const IntroContainer = styled(motion.div)`
 
   @media (max-width: 768px) {
     padding: 2rem;
+    border-radius: 16px;
   }
 `;
 
@@ -499,6 +503,12 @@ const IntroHeader = styled.div`
   gap: 1.5rem;
   margin-bottom: 2rem;
   grid-column: 1 / -1;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
 `;
 
 const ProfileImageContainer = styled.div`
@@ -521,7 +531,12 @@ const ProfileImage = styled.img`
   border: 3px solid #4e79a7;
   position: relative;
   z-index: 2;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 `;
 
 const DecorativeCircle = styled.div`
@@ -543,14 +558,11 @@ const DecorativeCircle = styled.div`
 
 const IntroHeaderText = styled.div`
   h3 {
-    font-size: 1.75rem;
+    font-size: clamp(1.5rem, 3vw, 1.75rem);
     margin-bottom: 0.5rem;
     color: #4e79a7;
-    font-weight: 600;
-
-    @media (max-width: 768px) {
-      font-size: 1.5rem;
-    }
+    font-weight: 700;
+    line-height: 1.3;
   }
 
   p {
@@ -566,7 +578,7 @@ const IntroText = styled.div`
     margin-bottom: 1.5rem;
     font-size: 1.1rem;
     line-height: 1.8;
-    color: ${({ theme }) => theme.colors?.text || '#333'};
+    color: ${({ theme }) => theme.colors?.text || '#2d3748'};
     position: relative;
     z-index: 1;
 
@@ -589,45 +601,46 @@ const PhotoGallery = styled.div`
 
 const GalleryImage = styled(motion.img)`
   width: 100%;
-  border-radius: 12px;
+  border-radius: 16px;
   aspect-ratio: 1/1;
   object-fit: cover;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   cursor: pointer;
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
   }
 `;
 
 const InfoGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.5rem;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
 `;
 
 const InfoCard = styled(motion.div)`
   background: ${({ theme }) => theme.colors?.background || '#fff'};
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
   border: 1px solid ${({ theme }) => theme.colors?.border || '#eaeaea'};
   position: relative;
   overflow: hidden;
-  height: 600px;
+  height: 650px;
   display: flex;
   flex-direction: column;
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
   }
 
   &::before {
@@ -635,19 +648,28 @@ const InfoCard = styled(motion.div)`
     position: absolute;
     top: 0;
     left: 0;
-    width: 4px;
+    width: 5px;
     height: 100%;
     background: linear-gradient(to bottom, #4e79a7, #76b7b2);
+  }
+
+  @media (max-width: 768px) {
+    padding: 2rem;
+    height: auto;
+    max-height: 600px;
   }
 `;
 
 const ScrollableContent = styled.div`
   overflow-y: auto;
   height: 100%;
-  padding-right: 0.5rem;
+  padding-right: 0.8rem;
   flex: 1;
   
   /* Custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #4e79a7 ${({ theme }) => theme.colors?.border || '#eaeaea'};
+  
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -663,21 +685,18 @@ const ScrollableContent = styled.div`
   }
 `;
 
-interface IconWrapperProps {
-  $color?: string;
-}
-
-const IconWrapper = styled.span<IconWrapperProps>`
+const IconWrapper = styled.span<{ $color?: string }>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: ${({ $color }) => `${$color}20`};
-  border-radius: 12px;
-  margin-right: 12px;
+  width: 44px;
+  height: 44px;
+  background: ${({ $color }) => `${$color}15`};
+  border-radius: 14px;
+  margin-right: 14px;
   color: ${({ $color }) => $color};
   backdrop-filter: blur(5px);
+  transition: all 0.3s ease;
 
   svg {
     width: 20px;
@@ -687,16 +706,16 @@ const IconWrapper = styled.span<IconWrapperProps>`
 
 const InfoTitle = styled.h3`
   font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  color: ${({ theme }) => theme.colors?.textPrimary || '#333'};
+  margin-bottom: 1.8rem;
+  color: ${({ theme }) => theme.colors?.textPrimary || '#2d3748'};
   display: flex;
   align-items: center;
-  font-weight: 600;
+  font-weight: 700;
 `;
 
 const InfoItem = styled.div`
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
+  margin-bottom: 1.8rem;
+  padding-bottom: 1.8rem;
   border-bottom: 1px dashed ${({ theme }) => theme.colors?.border || '#eaeaea'};
 
   &:last-child {
@@ -707,33 +726,34 @@ const InfoItem = styled.div`
 
   h3 {
     font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-    color: ${({ theme }) => theme.colors?.textPrimary || '#333'};
+    margin-bottom: 0.6rem;
+    color: ${({ theme }) => theme.colors?.textPrimary || '#2d3748'};
     font-weight: 600;
+    line-height: 1.4;
   }
 
   p {
     font-size: 0.95rem;
     color: ${({ theme }) => theme.colors?.textSecondary || '#666'};
-    margin-bottom: 0.5rem;
-    line-height: 1.6;
+    margin-bottom: 0.6rem;
+    line-height: 1.7;
   }
 `;
 
 const Company = styled.p`
   color: #4e79a7 !important;
-  font-weight: 500;
-  margin-bottom: 0.3rem !important;
+  font-weight: 600;
+  margin-bottom: 0.4rem !important;
 `;
 
 const Location = styled.p`
   color: ${({ theme }) => theme.colors?.textSecondary || '#666'} !important;
   font-size: 0.85rem !important;
-  margin-bottom: 0.5rem !important;
+  margin-bottom: 0.6rem !important;
   font-style: italic;
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.4rem;
 
   &::before {
     content: '📍';
@@ -744,11 +764,11 @@ const Location = styled.p`
 const Duration = styled.p`
   color: ${({ theme }) => theme.colors?.textSecondary || '#666'} !important;
   font-size: 0.85rem !important;
-  margin-bottom: 0.8rem !important;
+  margin-bottom: 1rem !important;
   opacity: 0.9;
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.4rem;
 
   &::before {
     content: '📅';
@@ -757,23 +777,24 @@ const Duration = styled.p`
 `;
 
 const AchievementsTitle = styled.p`
-  font-weight: 500 !important;
-  color: ${({ theme }) => theme.colors?.textPrimary || '#333'} !important;
-  margin-top: 0.8rem !important;
+  font-weight: 600 !important;
+  color: ${({ theme }) => theme.colors?.textPrimary || '#2d3748'} !important;
+  margin-top: 1rem !important;
+  margin-bottom: 0.6rem !important;
 `;
 
 const AchievementsList = styled.ul`
-  margin-top: 0.5rem;
+  margin-top: 0.6rem;
   padding-left: 0;
   list-style-type: none;
 
   li {
     font-size: 0.9rem;
-    color: ${({ theme }) => theme.colors?.text || '#333'};
-    margin-bottom: 0.5rem;
+    color: ${({ theme }) => theme.colors?.text || '#2d3748'};
+    margin-bottom: 0.6rem;
     position: relative;
-    padding-left: 1.5rem;
-    line-height: 1.5;
+    padding-left: 1.6rem;
+    line-height: 1.6;
 
     &::before {
       content: '▹';
@@ -781,6 +802,7 @@ const AchievementsList = styled.ul`
       left: 0;
       color: #4e79a7;
       font-weight: bold;
+      font-size: 1.1rem;
     }
   }
 `;
@@ -790,59 +812,64 @@ const CertificationLink = styled(motion.a)`
   align-items: center;
   color: #4e79a7;
   text-decoration: none;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
   background: rgba(78, 121, 167, 0.1);
-  margin-top: 0.5rem;
+  margin-top: 0.8rem;
   font-size: 0.9rem;
-  gap: 0.5rem;
+  gap: 0.6rem;
+  border: 1px solid rgba(78, 121, 167, 0.3);
 
   &:hover {
     color: white;
     background: #4e79a7;
     text-decoration: none;
-    box-shadow: 0 5px 15px rgba(78, 121, 167, 0.3);
+    box-shadow: 0 8px 20px rgba(78, 121, 167, 0.3);
+    transform: translateY(-2px);
   }
 
   svg {
-    transition: transform 0.2s ease;
-    
-    &:hover {
-      transform: translateX(3px);
-    }
+    transition: transform 0.3s ease;
   }
 `;
 
 const GallerySection = styled.section`
-  margin-top: 4rem;
+  margin-top: 5rem;
   width: 100%;
 `;
 
 const GalleryDescription = styled.p`
   text-align: center;
   max-width: 700px;
-  margin: 0 auto 2rem;
-  font-size: 1rem;
+  margin: 0 auto 3rem;
+  font-size: 1.05rem;
   color: ${({ theme }) => theme.colors?.textSecondary || '#666'};
-  line-height: 1.6;
+  line-height: 1.7;
+  opacity: 0.9;
+
+  @media (max-width: 768px) {
+    margin-bottom: 2rem;
+    font-size: 1rem;
+  }
 `;
 
 const FilterControls = styled.div`
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: 1.2rem;
+  margin-bottom: 3rem;
   flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
 `;
 
-interface FilterButtonProps {
-  $active: boolean;
-}
-
-const FilterButton = styled(motion.button)<FilterButtonProps>`
-  padding: 0.5rem 1.5rem;
+const FilterButton = styled(motion.button)<{ $active: boolean }>`
+  padding: 0.6rem 1.8rem;
   border-radius: 30px;
   border: none;
   background: ${({ $active }) => $active ? '#4e79a7' : 'transparent'};
@@ -851,71 +878,71 @@ const FilterButton = styled(motion.button)<FilterButtonProps>`
   cursor: pointer;
   transition: all 0.3s ease;
   border: 1px solid ${({ $active }) => $active ? 'transparent' : '#4e79a7'};
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
 
   &:hover {
     background: ${({ $active }) => $active ? '#3a5d80' : 'rgba(78, 121, 167, 0.1)'};
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
   }
 `;
 
 const LandscapeGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
 `;
 
-interface LandscapeItemProps {
-  $category: string;
-}
-
-const LandscapeItem = styled(motion.div)<LandscapeItemProps>`
+const LandscapeItem = styled(motion.div)<{ $category: string }>`
   position: relative;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  height: 250px; /* Fixed height */
-  width: 100%; /* Full width of grid cell */
-
-  /* Center the image */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  height: 280px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f5f5f5; /* Light background for images with transparency */
+  background: #f5f5f5;
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
     
     img {
-      transform: scale(1.03);
+      transform: scale(1.05);
     }
     
     div {
       opacity: 1;
     }
   }
-height: auto;
+
   img {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-    object-fit: contain; /* Show full image without cropping */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     transition: transform 0.5s ease;
+  }
+
+  @media (max-width: 768px) {
+    height: 240px;
   }
 `;
 
-interface GalleryImageOverlayProps {
-  $category: string;
-}
-
-interface ModalContentProps {
-  $category: 'events' | 'presentations' | 'certifications';
-  theme?: any; // Optional theme prop if using styled-components theme
-}
-
-const GalleryImageOverlay = styled.div<GalleryImageOverlayProps>`
+const GalleryImageOverlay = styled.div<{ $category: string }>`
   position: absolute;
   top: 0;
   left: 0;
@@ -923,9 +950,9 @@ const GalleryImageOverlay = styled.div<GalleryImageOverlayProps>`
   bottom: 0;
   background: ${({ $category }) => {
     switch($category) {
-      case 'events': return 'linear-gradient(to top, rgba(255, 255, 255, 0.95), transparent)';
-      case 'presentations': return 'linear-gradient(to top, rgba(255, 255, 255, 0.85), transparent)';
-      case 'certifications': return 'linear-gradient(to top, rgba(255, 255, 255, 0.85), transparent)';
+      case 'events': return 'linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent 40%)';
+      case 'presentations': return 'linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent 40%)';
+      case 'certifications': return 'linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent 40%)';
       default: return 'linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent)';
     }
   }};
@@ -934,20 +961,31 @@ const GalleryImageOverlay = styled.div<GalleryImageOverlayProps>`
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  padding: 1.5rem;
+  padding: 2rem;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s ease;
   
   p {
     text-align: center;
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    line-height: 1.4;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: white;
   }
   
   svg {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+    color: white;
+    opacity: 0.9;
+  }
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    
+    p {
+      font-size: 0.9rem;
+    }
   }
 `;
 
@@ -957,8 +995,8 @@ const ModalBackdrop = styled(motion.div)`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.9);
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(12px);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -966,40 +1004,16 @@ const ModalBackdrop = styled(motion.div)`
   padding: 2rem;
 `;
 
-const CloseButton = styled(motion.button)`
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  border: none;
-  font-size: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 10;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.9);
-    transform: scale(1.1);
-  }
-`;
-
-const ModalContent = styled(motion.div)<ModalContentProps>`
+const ModalContent = styled(motion.div)<{ $category: 'events' | 'presentations' | 'certifications' }>`
   position: relative;
-  width: 90vw; /* Use viewport width for better responsiveness */
-  max-width: min(900px, 90vw); /* Never exceed 900px or 90% of viewport */
-  max-height: 90vh; /* Use viewport height instead of fixed value */
+  width: 90vw;
+  max-width: min(1000px, 90vw);
+  max-height: 90vh;
   background: ${({ theme }) => theme.colors?.background || '#fff'};
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-  border-top: 5px solid ${({ $category }) => {
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+  border-top: 6px solid ${({ $category }) => {
     switch($category) {
       case 'events': return '#4e79a7';
       case 'presentations': return '#e15759';
@@ -1010,23 +1024,54 @@ const ModalContent = styled(motion.div)<ModalContentProps>`
   display: flex;
   flex-direction: column;
 
-  /* Responsive adjustments */
-  @media (max-width: 1024px) { /* Laptop sizes */
-    max-width: 80vw;
-    max-height: 70vh;
+  @media (max-width: 1024px) {
+    max-width: 85vw;
+    max-height: 85vh;
   }
 
-  @media (max-width: 768px) { /* Tablet sizes */
-    max-width: 98vw;
+  @media (max-width: 768px) {
+    max-width: 95vw;
     max-height: 90vh;
-    border-radius: 12px;
+    border-radius: 16px;
   }
 
-  @media (max-width: 480px) { /* Mobile sizes */
+  @media (max-width: 480px) {
     max-width: 100vw;
     max-height: 95vh;
     border-radius: 0;
     width: 100%;
+  }
+`;
+
+const CloseButton = styled(motion.button)`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: scale(1.1);
+  }
+
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    top: 15px;
+    right: 15px;
   }
 `;
 
@@ -1035,33 +1080,57 @@ const ModalImageContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 3rem;
   overflow: hidden;
+
+  @media (max-width: 768px) {
+    padding: 2rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1.5rem;
+  }
 `;
 
 const ModalImage = styled.img`
-  max-width: 90vw; /* 90% of viewport width */
-  max-height: 80vh; /* 80% of viewport height */
+  max-width: 100%;
+  max-height: calc(90vh - 200px);
   width: auto;
   height: auto;
-  object-fit: contain; /* Show full image without cropping */
-  border-radius: 8px;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+  @media (max-width: 768px) {
+    max-height: calc(85vh - 180px);
+  }
+
+  @media (max-width: 480px) {
+    max-height: calc(95vh - 160px);
+  }
 `;
 
 const ImageCaption = styled.div`
-  padding: 1.5rem;
+  padding: 1.8rem;
   text-align: center;
   background: ${({ theme }) => theme.colors?.background || '#fff'};
-  color: ${({ theme }) => theme.colors?.textPrimary || '#333'};
-  font-size: 1rem;
+  color: ${({ theme }) => theme.colors?.textPrimary || '#2d3748'};
+  font-size: 1.05rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.8rem;
+  border-top: 1px solid ${({ theme }) => theme.colors?.border || '#eaeaea'};
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    font-size: 1rem;
+  }
 `;
 
 const ImageCounter = styled.span`
   font-size: 0.9rem;
   color: ${({ theme }) => theme.colors?.textSecondary || '#666'};
+  opacity: 0.8;
 `;
 
 const NavigationButtons = styled.div`
@@ -1071,25 +1140,36 @@ const NavigationButtons = styled.div`
   right: 0;
   display: flex;
   justify-content: space-between;
-  padding: 0 1rem;
+  padding: 0 2rem;
   transform: translateY(-50%);
   z-index: 5;
+
+  @media (max-width: 768px) {
+    padding: 0 1rem;
+  }
 `;
 
 const NavButton = styled(motion.button)`
-  width: 50px;
-  height: 50px;
+  width: 54px;
+  height: 54px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   color: white;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: all 0.3s ease;
   
   &:hover {
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.8);
+    transform: scale(1.1);
+  }
+
+  @media (max-width: 768px) {
+    width: 44px;
+    height: 44px;
   }
 `;
 

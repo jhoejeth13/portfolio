@@ -50,13 +50,14 @@ const Hero = () => {
                 <LastName>Mondejar</LastName>
               </Title>
               <Role>
-                I'm an <HighlightedText>{text}</HighlightedText>
+                I'm a <HighlightedText>{text}</HighlightedText>
                 <Cursor>|</Cursor>
               </Role>
               <Description>
-                <p>
-                  I specialize in building <Highlight>modern</Highlight>, <Highlight>efficient</Highlight> web applications that solve real-world problems. With a focus on clean code and user experience, I bring ideas to life through technology.
-                </p>
+<p>
+  I build <Highlight>modern</Highlight> web applications that work. I focus on solving real problems and making things easy to use. I’m still learning, but I make sure every project teaches me something useful.
+</p>
+
               </Description>
 
               <ButtonGroup>

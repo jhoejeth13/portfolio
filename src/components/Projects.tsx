@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { AnimatePresence, motion } from 'framer-motion';
 import ReactModal from 'react-modal';
+import { FiExternalLink } from 'react-icons/fi';
 
 interface Project {
   name: string;
@@ -16,7 +17,7 @@ const projectGroups: Project[] = [
     name: "Graduates and Alumni DB System",
     description: "A centralized platform using K-means clustering to manage alumni records and evaluate institutional impact through graduate tracer data.",
     coverImage: "/FuamiScreenshots/1.png",
-    tags: ["Laravel", "Blade", "PHP", "MySQL", "JavaScript", "Tailwind CSS"],
+    tags: ["HTML", "Laravel", "Blade", "PHP", "MySQL", "JavaScript", "Tailwind CSS"],
     allImages: [
       "/FuamiScreenshots/1.png",
       "/FuamiScreenshots/2.png",
@@ -37,7 +38,7 @@ const projectGroups: Project[] = [
     name: "QUEUE+",
     description: "QUEUE+ aims to enhance queue workflow during peak periods like enrollment, prevent crowded hallways at the CEIT office counter, and facilitate seamless transactions between clerks and students.",
     coverImage: "/Queue+/1.png",
-    tags: ["PHP", "JavaScript", "MySQL", "CSS", "Bootstrap"],
+    tags: ["HTML", "PHP", "JavaScript", "MySQL", "CSS", "Bootstrap"],
     allImages: [
       "/Queue+/1.png",
       "/Queue+/2.png",
@@ -50,7 +51,7 @@ const projectGroups: Project[] = [
     name: "Barangay Time and Wage System",
     description: "Digital solution for tracking employee attendance, work hours, and automated wage computation in local government units.",
     coverImage: "/Apsystem/1.png",
-    tags: ["PHP", "Laravel", "MySQL", "JavaScript", "Bootstrap"],
+    tags: ["HTML", "PHP", "Laravel", "MySQL", "JavaScript", "CSS", "Bootstrap"],
     allImages: [
       "/Apsystem/1.png",
       "/Apsystem/2.png",
@@ -69,13 +70,42 @@ const projectGroups: Project[] = [
       "/Earthquake/3.png",
       "/Earthquake/4.png"
     ]
+  },
+  {
+    name: "ObjectDetection",
+description: "ObjectDetection is a real-time wearable item detector using YOLOv8 and transfer learning. It identifies caps, hats, glasses, and sunglasses with a custom-trained model from Roboflow.",
+    coverImage: "/ObjectDetection/2.jpg",
+    tags: ["Python", "YOLOv8", "Ultralytics", "OpenCV", "Roboflow", "Computer Vision", "Object Detection", "Transfer Learning"],
+    allImages: [
+      "/ObjectDetection/1.png",
+      "/ObjectDetection/1.jpg",
+      "/ObjectDetection/2.jpg",
+      "/ObjectDetection/3.png",
+      "/ObjectDetection/2.png",
+
+    ]
+  },
+    {
+    name: "Secure Registration & Login System",
+    description: "A web project built with advanced input validation and login security features, including password strength checks and username availability detection. It enforces proper formatting for names, addresses, and optional fields. Failed login attempts trigger timed lockouts to prevent brute force attacks. During cooldown periods, login actions and browser back navigation are disabled for added security.",
+    coverImage: "/Security/1.png",
+    tags: ["HTML", "CSS", "Bootstrap", "PHP", "JavaScript", "MySQL"],
+    allImages: [
+      "/Security/1.png",
+      "/Security/2.png",
+      "/Security/3.png",
+      "/Security/4.png",
+
+    ]
   }
+    
 ];
 
 const Projects = () => {
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [hoveredProject, setHoveredProject] = useState<number | null>(null);
+
 
   return (
     <ProjectsSection id="projects">
@@ -86,60 +116,70 @@ const Projects = () => {
             <TitleUnderline />
           </SectionTitle>
           <SectionDescription>
-            Here are some of the projects I worked on during college. While I'm only able to share a few due to privacy restrictions, they reflect my learning and hands-on experience.
+These are a few projects I worked on — all part of my journey learning to build real, useful tech.
           </SectionDescription>
         </HeaderContainer>
 
-        <ProjectsGrid>
-          {projectGroups.map((project, index) => (
-            <ProjectCard
-              key={project.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-              onMouseEnter={() => setHoveredProject(index)}
-              onMouseLeave={() => setHoveredProject(null)}
-              layout
-            >
-              <ProjectImageWrapper>
-                <ProjectImage 
-                  src={project.coverImage} 
-                  alt={`${project.name} cover`}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/default-project.jpg';
+      <ProjectsGrid>
+        {projectGroups.map((project, index) => (
+          <ProjectCard
+            key={project.name}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+            onMouseEnter={() => setHoveredProject(index)}
+            onMouseLeave={() => setHoveredProject(null)}
+            layout
+          >
+            <ProjectImageWrapper>
+              <ProjectImage 
+                src={project.coverImage} 
+                alt={`${project.name} cover`}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/default-project.jpg';
+                }}
+              />
+              <ImageOverlay $isHovered={hoveredProject === index}>
+                <ViewButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedProject(index);
                   }}
-                />
-                <ImageOverlay $isHovered={hoveredProject === index}>
-                  <ViewButton
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedProject(index);
-                    }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  View Details
+                </ViewButton>
+              </ImageOverlay>
+            </ProjectImageWrapper>
+            <ProjectContent>
+              <ProjectName>{project.name}</ProjectName>
+              <ProjectDescription>{project.description}</ProjectDescription>
+              <TechTags>
+                {project.tags.map((tag) => (
+                  <TechTag 
+                    key={tag}
                     whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
                   >
-                    View Details
-                  </ViewButton>
-                </ImageOverlay>
-              </ProjectImageWrapper>
-              <ProjectContent>
-                <ProjectName>{project.name}</ProjectName>
-                <ProjectDescription>{project.description}</ProjectDescription>
-                <TechTags>
-                  {project.tags.map((tag) => (
-                    <TechTag 
-                      key={tag}
-                      whileHover={{ scale: 1.05 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      {tag}
-                    </TechTag>
-                  ))}
-                </TechTags>
-              </ProjectContent>
-            </ProjectCard>
-          ))}
-        </ProjectsGrid>
+                    {tag}
+                  </TechTag>
+                ))}
+              </TechTags>
+              <ViewFullLink
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedProject(index);
+                }}
+                whileHover={{ x: 2 }}
+                transition={{ duration: 0.2 }}
+              >
+                View full project <FiExternalLink size={14} />
+              </ViewFullLink>
+            </ProjectContent>
+          </ProjectCard>
+        ))}
+      </ProjectsGrid>
 
         {/* Project Detail Modal */}
         <ReactModal
@@ -235,6 +275,22 @@ const Projects = () => {
     </ProjectsSection>
   );
 };
+
+const ViewFullLink = styled(motion.div)`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: ${({ theme }) => theme.colors?.primary || '#646cff'};
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-top: 1rem;
+  cursor: pointer;
+  width: fit-content;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 
 // Modal styles
 const modalStyles: ReactModal.Styles = {
@@ -459,7 +515,7 @@ const TechTags = styled(motion.div)`
 
 const TechTag = styled(motion.span)`
   background: ${({ theme }) => theme.colors?.backgroundLight || '#f0f0f0'};
-  color: ${({ theme }) => theme.colors?.primary || '#646cff'};
+  color: ${({ theme }) => theme.colors?.primary || 'black'};
   padding: 0.35rem 0.75rem;
   border-radius: 20px;
   font-size: 0.8rem;
